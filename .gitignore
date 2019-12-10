@@ -2,7 +2,7 @@
 # Project Ignores                       #
 #---------------------------------------#
 
-# Place to hid bot token
+# Place to hide bot token
 config.js
 
 # output

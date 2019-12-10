@@ -8,7 +8,7 @@ Steps to run:
 5. Set your discord bots token in a config.js like this: 
 
 module.exports = {
-    DISCORD_BOT_TOKEN : "", 
+    DISCORD_BOT_TOKEN : "TOKEN", 
 }
 
 6. run node Discord_bot.js to start the bot.

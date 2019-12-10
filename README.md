@@ -1,15 +1,17 @@
 # Discord_Bot
 
 Steps to run:
-1. Npm install
-2. Npm install discord.js
-3. Find your bots token, by going to https://discordapp.com/developers/applications/ and finding your server.
-4. Click on your application -> Bot -> Token -> "Copy"
-5. Set your discord bots token in a config.js like this: 
+1. Clone this repo
+2. Open the cloned repo in an editor such as Visual Studio Code.
+3. Run Npm install
+4. Run Npm install discord.js
+5. Find your bots token, by going to https://discordapp.com/developers/applications/ and finding your server.
+6. Click on your application -> Bot -> Token -> "Copy"
+7. Set your discord bots token in a config.js file like this(Git will ignore this file so that the token will not be public): 
 
 module.exports = {
-    DISCORD_BOT_TOKEN : "TOKEN", 
+    DISCORD_BOT_TOKEN : "TOKEN" 
 }
 
-6. Run node Discord_bot.js to start the bot.
-7. Hit CTRL C to stop the bot.
+8. Run node Discord_bot.js to start the bot.
+9. Hit CTRL C to stop the bot.

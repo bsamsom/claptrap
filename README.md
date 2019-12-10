@@ -18,8 +18,8 @@ module.exports = {
 
 Current Commands:
     Restricted Commands to Admin role:
-	    !listServers- Will list all of the servers the bot is connected to and all of their channels.
-		!listMembers [Role]- Will list all of the members with the Role.
-		!listServerRoles - Will list of the all roles on the Server.
+        !listServers- Will list all of the servers the bot is connected to and all of their channels.
+        !listMembers [Role]- Will list all of the members with the Role.
+        !listServerRoles - Will list of the all roles on the Server.
     Non-Restricted Commands:
    

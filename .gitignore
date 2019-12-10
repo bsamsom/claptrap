@@ -2,6 +2,9 @@
 # Project Ignores                       #
 #---------------------------------------#
 
+# Place to hid bot token
+config.js
+
 # output
 /.temp
 /.tmp

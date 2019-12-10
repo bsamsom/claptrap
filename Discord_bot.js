@@ -40,9 +40,7 @@ function processCommand(message) {
     console.log("Command received: " + command + " sent by user: " + user.toString() + " " + user.displayName)
     console.log("Arguments: " + arguments) // There may not be any arguments
 
-    if (command == "help") {
-        helpCommand(arguments, message)
-    }else if(checkForRole(user,["Admin"])){
+    if(checkForRole(user,["Admin"])){
         if (command == "listServers") {
             lists.listServers()
         }else if (command == "listMembers") {
@@ -51,7 +49,7 @@ function processCommand(message) {
             lists.listServerRoles(user, message)
         }
     }else {
-        message.channel.send("I don't understand the command. Try `!help`")
+        message.channel.send("I don't understand the command you are trying to use.")
     }
 }
 

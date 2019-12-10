@@ -11,5 +11,5 @@ module.exports = {
     DISCORD_BOT_TOKEN : "TOKEN", 
 }
 
-6. run node Discord_bot.js to start the bot.
-7. hit CTRL C to stop the bot.
+6. Run node Discord_bot.js to start the bot.
+7. Hit CTRL C to stop the bot.

@@ -15,3 +15,11 @@ module.exports = {
 
 8. Run node Discord_bot.js to start the bot.
 9. Hit CTRL C to stop the bot.
+
+Current Commands:
+    Restricted Commands to Admin role:
+        !listServers- Will list all of the servers the bot is connected to and all of their channels.
+        !listMembers [Role]- Will list all of the members with the Role.
+        !listServerRoles - Will list of the all roles on the Server.
+    Non-Restricted Commands:
+   

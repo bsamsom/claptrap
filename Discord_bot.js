@@ -1,7 +1,8 @@
-const Discord = require('discord.js')
-const config = require("./config.js")
-const lists = require("./Lists.js")
-const client = new Discord.Client()
+Discord = require('discord.js')
+config = require("./.env")
+lists = require("./Lists.js")
+schedule = require("./Schedule.js")
+client = new Discord.Client()
 
 client.on('ready', () => {
     console.log("Connected as " + client.user.tag)
@@ -31,25 +32,31 @@ function messageContains(message) {
 
 function processCommand(message) {
     fullCommand = message.content.substr(1) // Remove the leading exclamation mark
-    splitCommand = fullCommand.split(",") // Split the message up in to pieces for comma(My server contains roles with spaces)
+    splitCommand = fullCommand.split(" ") // Split the message up in to pieces for comma(My server contains roles with spaces)
     command = splitCommand[0] // The first word directly after the exclamation is the command
-    arguments = splitCommand.slice(1) // All other words are arguments/parameters/options for the command
-    user = getUser(message)
-    guild = message.guild;//get the current guild
+    params = splitCommand.slice(1) // All other words are arguments/parameters/options for the command
+    try{
+        user = getUser(message)
+        guild = message.guild;//get the current guild
 
-    console.log("Command received: " + command + " sent by user: " + user.toString() + " " + user.displayName)
-    console.log("Arguments: " + arguments) // There may not be any arguments
-
-    if(checkForRole(user,["Admin"])){
-        if (command == "listServers") {
-            lists.listServers()
-        }else if (command == "listMembers") {
-            lists.listMembersWithRole(user, message, arguments)
-        }else if (command == "listServerRoles"){
-            lists.listServerRoles(user, message)
+        console.log("Command received: " + command + " sent by user: " + user.toString() + " " + user.displayName)
+        console.log("Arguments: " + params) // There may not be any arguments
+    
+        if(checkForRole(user,["Admin"]) && (command == "listServers" || command == "listMembers" || command == "listServerRoles")){
+            if (command == "listServers") {
+                lists.listServers(client)
+            }else if (command == "listMembers") {
+                lists.listMembersWithRole(user, message, params)
+            }else if (command == "listServerRoles"){
+                lists.listServerRoles(user, message)
+            }
+        }else if (command == "schedule"){
+            schedule.displaySchedule(message, params)
+        }else {
+            message.channel.send("I don't understand the command you are trying to use.")
         }
-    }else {
-        message.channel.send("I don't understand the command you are trying to use.")
+    }catch(error){
+        console.error(error)
     }
 }
 
@@ -59,7 +66,7 @@ function checkForRole(user, requiredRole){
 
 function getUser(message){
     guild = message.guild;
-    return guild.member(message.author)// returns the actaul user so that .name and .displayname work
+    return guild.member(message.author)// returns the actual user so that .name and .displayname work
 }
 
 client.login(config.DISCORD_BOT_TOKEN)

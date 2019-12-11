@@ -3,7 +3,8 @@
 #---------------------------------------#
 
 # Place to hide bot token
-config.js
+.env
+client_secret.json
 
 # output
 /.temp

@@ -26,7 +26,7 @@ module.exports = {
         })
     },
 
-    listServers: function (){
+    listServers: function (client){
         console.log("Servers:")// List servers the bot is connected to
         client.guilds.forEach((guild) => {
             console.log(" - " + guild.name + " " + guild.id)// List all channels of each server

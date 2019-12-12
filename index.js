@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 const fs = require('fs')
-const { prefix, token } = require('./config.json')
+const { prefix, token, guild_id, hubot_testing } = require('./config.json')
 const client = new Discord.Client()
 
 client.commands = new Discord.Collection()
@@ -14,16 +14,14 @@ for (const file of commandFiles) {
 client.on('ready', () => {
     console.log("Connected as " + client.user.tag)
     client.user.setActivity("Youtube", {type: "WATCHING"})
-
     var d = new Date()
-    var n = d.getDay()
-    
+
     // 3 is wednesday
     if(d.getDay() == 4){
         if(d.getHours() == 11 && d.getMinutes() == 3 && d.getSeconds() == 0){
             console.log(d.getDay() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds())
-            guild = client.guilds.get('223632402180866052')//Room for Stuff and Things
-            channel = guild.channels.get('653412209619238913')
+            guild = client.guilds.get(guild_id)
+            channel = guild.channels.get(hubot_testing)
             args = [ 'schedule', 'next' ]
             const command = args.shift().toLowerCase()
             client.commands.get(command).execute(channel, args)

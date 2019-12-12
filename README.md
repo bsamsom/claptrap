@@ -24,3 +24,8 @@ Current Commands:
         !listServerRoles - Will list of the all roles on the Server.
     Non-Restricted Commands:
    
+   
+Npm install
+Npm install discord.js
+npm install google-spreadsheet
+npm install easy-table

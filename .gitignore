@@ -3,7 +3,7 @@
 #---------------------------------------#
 
 # Place to hide bot token
-.env
+config.json
 client_secret.json
 
 # output

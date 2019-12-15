@@ -1,6 +1,7 @@
 module.exports = {
-    name: 'listserverroles',
-    description: 'listserverroles',
+    name: 'roles',
+    description: 'Lists all roles on a server.',
+    aliases: [''],
     args: false,
     usage: '',
     guildOnly: true,

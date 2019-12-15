@@ -1,0 +1,29 @@
+{
+  "name": "discord_bot",
+  "version": "0.0.0",
+  "description": "This is a bot for discord written in javascript",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "discord.js-commando": "^0.10.0",
+    "easy-table": "^1.1.1",
+    "google-spreadsheet": "^2.0.8",
+    "googleapis": "^39.2.0",
+    "node-fetch": "^2.6.0",
+    "ytdl-core": "^1.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsamsom/Discord_Bot.git"
+  },
+  "author": "Ben Samsom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bsamsom/Discord_Bot/issues"
+  },
+  "homepage": "https://github.com/bsamsom/Discord_Bot#readme"
+}

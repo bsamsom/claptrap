@@ -1,15 +1,27 @@
 const Discord = require('discord.js')
 const fs = require('fs')
+const { sep } = require("path");
 const { prefix, token, guild_id, hubot_testing } = require('./config.json')
 const client = new Discord.Client()
 
 client.commands = new Discord.Collection()
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+const load = (dir = "./commands/") => {
 
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`)
-	client.commands.set(command.name, command)
-}
+	fs.readdirSync(dir).forEach(dirs => {
+	// we read the commands directory for sub folders and filter the files with name with extension .js
+		const commands = fs.readdirSync(`${dir}${sep}${dirs}${sep}`).filter(files => files.endsWith(".js"));
+		// we use for loop in order to get all the commands in sub directory
+		for (const file of commands) {
+		// We make a pull to that file so we can add it the bot.commands collection
+			const pull = require(`${dir}/${dirs}/${file}`);
+            client.commands.set(pull.name, pull);
+		}
+	});
+};
+
+// we call the function to all the commands.
+load();
+
 
 client.on('ready', () => {
     console.log("Connected as " + client.user.tag)
@@ -29,15 +41,17 @@ client.on('ready', () => {
     }
 })
 
-client.on('message', (message) => {
+client.on('message', (message) => {    
+    messageContains(message)
+
     if (!message.content.startsWith(prefix) || message.author.bot) return
 
     const args = message.content.slice(prefix.length).split(/ +/)//whitespace
     args.push(client)
     const commandName = args.shift().toLowerCase()
 
-    if (!client.commands.has(commandName)) return
-    const command = client.commands.get(commandName)
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
+	if (!command) return
 
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply('I can\'t execute that command inside DMs!');
@@ -60,17 +74,17 @@ client.on('message', (message) => {
         message.reply('there was an error trying to execute that command!')
     }
         
-
-    messageContains(message)
+    
 })
 
 function messageContains(message) {
     if(message.content.includes("food")){
         message.react("🥞")
     }
-    if(message.content.includes("died") || message.content.includes("death") || message.content.includes("kill")){
+    if(includes(message,"died") || includes(message,"death") || includes(message,"kill") || includes(message,"die")){
         message.react("☠")
     }
 }
+function includes(message, val) {return message.content.includes(val)}
 
 client.login(token)

@@ -8,23 +8,16 @@ Steps to run:
 5. npm install google-spreadsheet
 6. Find your bots token, by going to https://discordapp.com/developers/applications/ and finding your server.
 7. Click on your application -> Bot -> Token -> "Copy"
-8. Set your discord bots token in a .env file like this(Git will ignore this file so that the token will not be public): 
+8. Set your discord bots token in a config.json file like this(Git will ignore this file so that the token will not be public): 
 
-module.exports = {
-    DISCORD_BOT_TOKEN : "TOKEN" 
+{
+    "prefix": "!",
+    "token" : "token-id", 
 } 
 
-9. Run node Discord_bot.js to start the bot.
+9. Run node index.js to start the bot.
 10. Hit CTRL C to stop the bot.
 
-Current Commands:
-    Restricted Commands to Admin role:
-        !listServers- Will list all of the servers the bot is connected to and all of their channels.
-        !listMembers [Role]- Will list all of the members with the Role.
-        !listServerRoles - Will list of the all roles on the Server.
-    Non-Restricted Commands:
-   
-   
 Npm install
 Npm install discord.js
 npm install google-spreadsheet

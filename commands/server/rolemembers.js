@@ -1,6 +1,7 @@
 module.exports = {
-    name: 'listmemberswithrole',
-    description: 'listmemberswithrole',
+    name: 'rolemembers',
+    description: 'Lists all members on a server with the provided role.',
+    aliases: [''],
     args: true,
     usage: '<role>',
     guildOnly: true,
@@ -19,5 +20,4 @@ module.exports = {
             message.channel.send(printString)
         }
     }
-
 }

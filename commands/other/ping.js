@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'ping',
-	description: 'Ping!',
+	description: 'Used to determine if the bot is online.',
+	aliases: [''],
 	args: false,
 	usage: '',
 	guildOnly: false,

@@ -5,7 +5,7 @@ module.exports = {
 	args: false,
 	usage: '',
 	guildOnly: false,
-	execute(message, args) {
-		message.channel.send('Pong.')
+	execute(message) {
+		message.channel.send('Pong.');
 	},
 }

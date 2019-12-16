@@ -19,6 +19,14 @@ Steps to run:
 10. Hit CTRL C to stop the bot.
 
 Npm install
-Npm install discord.js
-npm install google-spreadsheet
-npm install easy-table
+
+requires: python
+    admin in powershell: 
+        npm install windows-build-tools
+requires: choco
+    admin powershell:
+        Set-ExecutionPolicy Bypass -Scope Process -Force; `
+        >>   iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+requires: ffmpeg
+    admin powershell:
+        choco install ffmpeg

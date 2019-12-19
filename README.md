@@ -21,14 +21,14 @@
 </ol>
 
 <pr>
-requires: python
-    admin in powershell: 
-        npm install windows-build-tools
-requires: choco
-    admin powershell:
-        Set-ExecutionPolicy Bypass -Scope Process -Force; `
-        >>   iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-requires: ffmpeg
-    admin powershell:
-        choco install ffmpeg
+requires: python<br>
+    admin in powershell: <br>
+        npm install windows-build-tools<br>
+requires: choco<br>
+    admin powershell:<br>
+        Set-ExecutionPolicy Bypass -Scope Process -Force; `<br>
+        >>   iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))<br>
+requires: ffmpeg<br>
+    admin powershell:<br>
+        choco install ffmpeg<br>
 </pr>

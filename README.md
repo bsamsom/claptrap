@@ -1,22 +1,24 @@
 # Discord_Bot
 
 <h2>Steps to run:</h2>
-1. Clone this repo
-2. Open the cloned repo in an editor such as Visual Studio Code.
-3. Run Npm install
-4. npm install google-spreadsheet
-5. Find your bots token, by going to https://discordapp.com/developers/applications/ and finding your server.
-6. Click on your application -> Bot -> Token -> "Copy"
-7. Set your discord bots token in a config.json file like this(Git will ignore this file so that the token will not be public): 
+<ol>
+<li>1. Clone this repo</li>
+<li>2. Open the cloned repo in an editor such as Visual Studio Code.</li>
+<li>3. Run Npm install</li>
+<li>4. npm install google-spreadsheet</li>
+<li>5. Find your bots token, by going to https://discordapp.com/developers/applications/ and finding your server.</li>
+<li>6. Click on your application -> Bot -> Token -> "Copy"</li>
+<li>7. Set your discord bots token in a config.json file like this(Git will ignore this file so that the token will not be public): </li>
+
 <p>
 {<br>
     "prefix": "!",<br>
     "token" : "token-id", <br>
 } <br>
 </p>
-9. Run node index.js to start the bot.
-10. Hit CTRL C to stop the bot.
-
+<li>9. Run node index.js to start the bot.</li>
+<li>10. Hit CTRL C to stop the bot.</li>
+</ol>
 
 <pr>
 requires: python

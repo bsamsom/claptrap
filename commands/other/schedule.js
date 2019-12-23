@@ -64,6 +64,7 @@ module.exports = {
 function setData(data, bday, btime, aday, atime) {
 	data.cell('Brents D&D Campaign', bday);
 	data.cell('Brents Start Time', btime);
+	data.cell('|', '|');
 	data.cell('Anils D&D Campaign', aday);
 	data.cell('Anils Start Time', atime);
 	data.newRow();

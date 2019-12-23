@@ -2,7 +2,7 @@ const { prefix } = require('../../config.json');
 const Table = require('easy-table');
 module.exports = {
 	name: 'help',
-	description: 'Lists all commands on this bot, or info about a specific command.',
+	description: 'Lists all commands on this bot',
 	aliases: ['commands'],
 	args: false,
 	usage: '<command>',
@@ -28,7 +28,7 @@ module.exports = {
 			else{
 				t.cell('Aliases', element.aliases);
 			}
-			t.cell('Server Only', element.guildOnly);
+			t.cell('Server', element.guildOnly);
 			t.newRow();
 		});
 		// console.log(t.toString())

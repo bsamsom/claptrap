@@ -4,6 +4,7 @@
   "description": "This is a bot for discord written in javascript",
   "main": "index.js",
   "dependencies": {
+    "cron": "^1.7.2",
     "discord.js": "^11.5.1",
     "easy-table": "^1.1.1",
     "eslint": "^6.7.2",
@@ -11,6 +12,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "google-spreadsheet": "^2.0.8",
     "googleapis": "^39.2.0",
+    "node-cron": "^2.0.3",
     "node-fetch": "^2.6.0",
     "node-gyp": "^6.0.1",
     "node-opus": "^0.3.3",

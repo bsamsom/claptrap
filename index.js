@@ -1,7 +1,8 @@
 const discord = require('discord.js');
 const fs = require('fs');
 const { sep } = require('path');
-const { prefix, token, guild_id, hubot_testing } = require('./config.json');
+const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons } = require('./config.json');
+const cron = require('node-cron');
 
 const client = new discord.Client();
 client.queue = new Map();
@@ -23,6 +24,7 @@ const load = (dir = './commands/') => {
 
 // we call the function to all the commands.
 load();
+scheduledTask();
 
 client.on('guildMemberAdd', member => {
 	// change this to the channel you want to send the greeting to
@@ -33,20 +35,7 @@ client.on('guildMemberAdd', member => {
 
 client.on('ready', () => {
 	console.log('Connected as ' + client.user.tag);
-	client.user.setActivity('Youtube', { type: 'WATCHING' });
-	const d = new Date();
-
-	// 3 is wednesday
-	if(d.getDay() == 4) {
-		if(d.getHours() == 11 && d.getMinutes() == 3 && d.getSeconds() == 0) {
-			console.log(d.getDay() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
-			const guild = client.guilds.get(guild_id);
-			const channel = guild.channels.get(hubot_testing);
-			const args = [ 'schedule', 'next' ];
-			const command = args.shift().toLowerCase();
-			client.commands.get(command).execute(channel, args);
-		}
-	}
+	client.user.setActivity('The Echonet', { type: 'WATCHING' });
 });
 
 client.on('message', (message) => {
@@ -96,5 +85,15 @@ function messageContains(message) {
 	}
 }
 function includes(message, val) {return message.content.includes(val);}
+
+function scheduledTask() {
+	cron.schedule('0 0 12 * * Wednesday', function() {
+		const guild = client.guilds.get(guild_id);
+		const channel = guild.channels.get(dungeons_and_dragons);
+		const args = [ 'schedule', 'next' ];
+		const command = args.shift().toLowerCase();
+		client.commands.get(command).execute(channel, args);
+	});
+}
 
 client.login(token);

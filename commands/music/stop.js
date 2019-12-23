@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'stop',
-	description: 'Stop all songs in the queue!',
+	description: 'Stop all songs in the queue.',
 	aliases: [''],
 	args: false,
 	usage: '',

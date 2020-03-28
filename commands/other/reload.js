@@ -3,7 +3,7 @@ const { join } = require('path');
 module.exports = {
 	name: 'reload',
 	description: 'Reloads a command',
-	aliases: [''],
+	aliases: ['relaod', 'realod'],
 	args: true,
 	usage: '<command>',
 	guildOnly: true,

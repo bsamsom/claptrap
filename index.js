@@ -88,8 +88,8 @@ function includes(message, val) {return message.content.includes(val);}
 
 function scheduledTask() {
 	cron.schedule('0 0 12 * * Wednesday', function() {
-		const guild = client.guilds.get(guild_id);
-		const channel = guild.channels.get(dungeons_and_dragons);
+		const guild = client.guilds.cache.get(guild_id);
+		const channel = guild.channels.cache.get(dungeons_and_dragons);
 		const args = [ 'schedule', 'next' ];
 		const command = args.shift().toLowerCase();
 		client.commands.get(command).execute(channel, args);

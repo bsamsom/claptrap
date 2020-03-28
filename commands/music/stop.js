@@ -7,8 +7,16 @@ module.exports = {
 	guildOnly: true,
 	execute(message) {
 		const serverQueue = message.client.queue.get(message.guild.id);
-		if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to stop the music!');
-		serverQueue.songs = [];
-		serverQueue.connection.dispatcher.end();
+		if (serverQueue && serverQueue.playing) {
+			serverQueue.playing = false;
+			serverQueue.connection.dispatcher.end();
+			serverQueue.songs = [];
+			message.client.queue = new Map();
+			return message.channel.send(':octagonal_sign: Stopped all music.');
+		}
+		else{
+			return message.channel.send('There is nothing playing.');
+		}
+
 	},
 };

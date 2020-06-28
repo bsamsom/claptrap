@@ -5,9 +5,17 @@
 <li>Clone this repo</li>
 <li>Open the cloned repo in an editor such as Visual Studio Code.</li>
 <li>Install nodejs(https://nodejs.org/en/download/) one of the option is to install additional software, this will install python and chocolatey.</li>
-  
-<li>Run Npm install</li>
-<li>npm install google-spreadsheet</li>
+
+
+Linux:
+<li>clone repo</li>
+<li>brew install python</li>
+<li>brew install ffmpeg</li>
+<li>brew install node</li>
+<li>apt install npm</li>
+<li>npm install</li>
+
+
 <li>Find your bots token, by going to https://discordapp.com/developers/applications/ and finding your server.</li>
 <li>Click on your application -> Bot -> Token -> "Copy"</li>
 <li>Set your discord bots token in a config.json file like this(Git will ignore this file so that the token will not be public): </li>

@@ -1,12 +1,4 @@
 # Discord_Bot
-
-<h2>Steps to run:</h2>
-<ol>
-<li>Clone this repo</li>
-<li>Open the cloned repo in an editor such as Visual Studio Code.</li>
-<li>Install nodejs(https://nodejs.org/en/download/) one of the option is to install additional software, this will install python and chocolatey.</li>
-
-
 Linux:
 <li>clone repo</li>
 <li>brew install python</li>

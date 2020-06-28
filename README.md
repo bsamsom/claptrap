@@ -21,17 +21,5 @@ Linux:
 
 <li>Run node index.js to start the bot.</li>
 <li>Hit CTRL C to stop the bot.</li>
-</ol>
 
-
-The following is installed in the command prompt by running as an admin<br>
-&nbsp;&nbsp;&nbsp;&nbsp;choco:<br>
-> @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-
-
-The following is installed in powershell by running as an admin<br>
-&nbsp;&nbsp;&nbsp;&nbsp;python:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;npm install windows-build-tools<br>
-&nbsp;&nbsp;&nbsp;&nbsp;ffmpeg:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;choco install ffmpeg<br>
 

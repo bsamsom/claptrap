@@ -32,27 +32,32 @@ module.exports = {
 				try {
 					rows.forEach(row => {
 						const brent = new Date(row.brentscampaign);
-						const anil = new Date(row.anilscampaign);
-						var b = days[brent.getDay()] + ' ' + months[brent.getMonth()] + ' ' + brent.getDate();
-						var a = days[anil.getDay()] + ' ' + months[anil.getMonth()] + ' ' + anil.getDate();
+						const anil 	= new Date(row.anilscampaign);
+						var b 		= days[brent.getDay()] + ' ' + months[brent.getMonth()] + ' ' + brent.getDate();
+						var a 		= days[anil.getDay()] + ' ' + months[anil.getMonth()] + ' ' + anil.getDate();
+						var btime 	= row._cokwr;
+						var atime 	= row. _cre1l;
+
 						if( brent == "Invalid Date"){
-							b = "No Session"
+							b 		= "No Session"
+							btime 	= "No Session"
 						}
 						if( anil == "Invalid Date"){
-							a = "No Session"
+							a 		= "No Session"
+							atime 	= "No Session"
 						}
 
 						if (args[0] == 'full') {
-							setData(data, b, row._cokwr, a, row. _cre1l);
+							setData(data, b, btime, a, atime);
 						}
 						else if (args[0] == 'upcoming') {
 							if (brent > Date.now() || anil > Date.now()) {
-								setData(data, b, row._cokwr, a, row. _cre1l);
+								setData(data, b, btime, a, atime);
 							}
 						}
 						else if (args[0] == 'next') {
 							if (brent > Date.now() || anil > Date.now()) {
-								setData(data, b, row._cokwr, a, row. _cre1l);
+								setData(data, b, btime, a, atime);
 								throw BreakException;
 							}
 						}

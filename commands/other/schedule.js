@@ -33,8 +33,14 @@ module.exports = {
 					rows.forEach(row => {
 						const brent = new Date(row.brentscampaign);
 						const anil = new Date(row.anilscampaign);
-						const b = days[brent.getDay()] + ' ' + months[brent.getMonth()] + ' ' + brent.getDate();
-						const a = days[anil.getDay()] + ' ' + months[anil.getMonth()] + ' ' + anil.getDate();
+						var b = days[brent.getDay()] + ' ' + months[brent.getMonth()] + ' ' + brent.getDate();
+						var a = days[anil.getDay()] + ' ' + months[anil.getMonth()] + ' ' + anil.getDate();
+						if( brent == "Invalid Date"){
+							b = "No Session"
+						}
+						if( anil == "Invalid Date"){
+							a = "No Session"
+						}
 
 						if (args[0] == 'full') {
 							setData(data, b, row._cokwr, a, row. _cre1l);

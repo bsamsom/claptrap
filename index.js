@@ -3,6 +3,7 @@ const fs = require('fs');
 const { sep } = require('path');
 const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons } = require('./config.json');
 const cron = require('node-cron');
+//const prefix = process.env.config;
 
 const client = new discord.Client();
 client.queue = new Map();

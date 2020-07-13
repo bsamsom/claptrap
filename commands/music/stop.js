@@ -12,10 +12,12 @@ module.exports = {
 			serverQueue.connection.dispatcher.end();
 			serverQueue.songs = [];
 			message.client.queue = new Map();
-			return message.channel.send(':octagonal_sign: Stopped all music.');
+			message.channel.send(':octagonal_sign: Stopped all music.');
+			return false;
 		}
 		else{
-			return message.channel.send('There is nothing playing.');
+			message.channel.send('There is nothing playing.');
+			return false;
 		}
 
 	},

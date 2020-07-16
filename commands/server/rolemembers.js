@@ -8,15 +8,24 @@ module.exports = {
 	execute(message, args) {
 		// user roles
 		const guild = message.guild;
-		const roles = message.guild.roles.find(role => role.name === args[0]);
-		if(roles != null) {
-			const membersWithRole = message.guild.roles.get(roles.id).members;
-			let printString = `there are ${membersWithRole.size} members with the Role of: ${args[1]}\n`;
-			membersWithRole.forEach((user) => {
-				const member = guild.member(user);
-				printString += '\t' + member.displayName + '\n';
-			});
-			message.channel.send(printString);
-		}
+		var roles;
+		message.guild.roles.fetch()
+		.then(allroles => {
+			allroles.cache.forEach((role) => {
+				//console.log(role.name);
+				//console.log(args[0].toLowerCase());
+				if(role.name === args[0].toLowerCase()){
+					let members = role.members.map(m=>m.user.tag);
+					//console.log(members)
+					let printString = `There are ${members.length} members with the Role of ${args[0]}:\n`;
+					members.forEach((user) => {
+						//console.log(user)
+						printString += '\t' + user + '\n';
+					});
+					message.channel.send(printString);
+				}
+			})
+		})
+		.catch(console.error);
 	},
 };

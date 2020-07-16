@@ -37,6 +37,10 @@ client.on('guildMemberAdd', member => {
 client.on('ready', () => {
 	console.log('Connected as ' + client.user.tag);
 	client.user.setActivity('The Echonet', { type: 'WATCHING' });
+	//const guild = client.guilds.cache.get(guild_id);
+	//const channel = guild.channels.cache.get(hubot_testing);
+	//channel.send(val);
+
 });
 
 client.on('message', (message) => {

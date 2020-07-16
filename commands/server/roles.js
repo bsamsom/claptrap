@@ -8,12 +8,11 @@ module.exports = {
 	execute(message) {
 		message.guild.roles.fetch()
 		.then(allRoles => {
-			let printString = `There are ${allRoles.cache.size} roles: `;
+			let printString = `There are ${allRoles.cache.size} roles: \n` + '```';
 			allRoles.cache.forEach((role) => {
-				printString += role.name + ', ';
+				printString += role.name + '\n';
 			});
-			// remove extra ', '
-			printString = printString.substr(0, printString.length - 2);
+			printString += '```';
 			message.channel.send(printString);
 		})
 		.catch(console.error);

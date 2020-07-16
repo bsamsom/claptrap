@@ -16,12 +16,13 @@ module.exports = {
 				//console.log(args[0].toLowerCase());
 				if(role.name === args[0].toLowerCase()){
 					let members = role.members.map(m=>m.user.tag);
-					//console.log(members)
-					let printString = `There are ${members.length} members with the Role of ${args[0]}:\n`;
+					//console.log(members);
+					let printString = `There are ${members.length} members with the Role of ${args[0]}:\n` + '```';
 					members.forEach((user) => {
-						//console.log(user)
-						printString += '\t' + user + '\n';
+						//console.log(user);
+						printString += user + '\n';
 					});
+					printString += '```';
 					message.channel.send(printString);
 				}
 			})

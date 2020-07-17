@@ -28,7 +28,7 @@ module.exports = {
 			const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 			doc.getRows(1, function(err, rows) {
 				const BreakException = {};
-				const data = new Table;
+				var data = new Table;
 				try {
 					rows.forEach(row => {
 						const brent = new Date(row.brentscampaign);
@@ -36,7 +36,7 @@ module.exports = {
 						var b 		= days[brent.getDay()] + ' ' + months[brent.getMonth()] + ' ' + brent.getDate();
 						var a 		= days[anil.getDay()] + ' ' + months[anil.getMonth()] + ' ' + anil.getDate();
 						var btime 	= row._cokwr;
-						var atime 	= row. _cre1l;
+						var atime 	= row._cre1l;
 
 						if( brent == "Invalid Date"){
 							b 		= "No Session"
@@ -48,16 +48,16 @@ module.exports = {
 						}
 
 						if (args[0] == 'full') {
-							setData(data, b, btime, a, atime);
+							data = setData(data, b, btime, a, atime, channel);
 						}
 						else if (args[0] == 'upcoming') {
 							if (brent > Date.now() || anil > Date.now()) {
-								setData(data, b, btime, a, atime);
+								data = setData(data, b, btime, a, atime, channel);
 							}
 						}
 						else if (args[0] == 'next') {
 							if (brent > Date.now() || anil > Date.now()) {
-								setData(data, b, btime, a, atime);
+								data = setData(data, b, btime, a, atime, channel);
 								throw BreakException;
 							}
 						}
@@ -72,11 +72,26 @@ module.exports = {
 	},
 };
 
-function setData(data, bday, btime, aday, atime) {
+function setData(data, bday, btime, aday, atime, channel) {
+	//char limit 2,000
+	var test1 = "" + bday + btime + aday + atime;
+	var test2 = "Brents D&D Campaign  Brents Start Time  |  Anils D&D Campaign  Anils Start Time ";
+	var max = 0;
+	if(test1 > max); max = test1.length;
+	if(test2 > max); max = test2.length;
+	//console.log("max", max);
+	if(data.toString().length + max > 1900){
+		//channel.send('```' + temp.toString() + '```');
+		//console.log("temp", data.toString().length + max);
+		channel.send('```' + data.toString() + '```');
+		data = new Table;
+	}
+
 	data.cell('Brents D&D Campaign', bday);
 	data.cell('Brents Start Time', btime);
 	data.cell('|', '|');
 	data.cell('Anils D&D Campaign', aday);
 	data.cell('Anils Start Time', atime);
-	data.newRow();
+	data.newRow();	
+	return data;
 }

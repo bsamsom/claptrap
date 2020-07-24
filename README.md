@@ -28,9 +28,13 @@ Docker:
 - build container:
   ```docker build -t my-bot .```
 - run container(-d runs in background):
-  ```docker run -d my-bot```
-- get contianer:
+  ```docker run --name="Discord_bot" -d my-bot```
+- get all contianers:
   ```docker ps```
+- get Discord_bot container id:
+  ```docker ps -aqf "name=Discord_bot"```
+- kill container:
+  ```docker container kill Discord_bot```
 - container logs:
   ```docker logs <our container's ID>```
 - run on contianer:

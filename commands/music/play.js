@@ -1,4 +1,5 @@
 const ytdl = require('ytdl-core-discord');
+const opus = require('@discordjs/opus');
 
 module.exports = {
 	name: 'play',

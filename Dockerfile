@@ -7,7 +7,6 @@ WORKDIR /usr/src/bot
 # Copy and Install our bot
 COPY package.json /usr/src/bot
 RUN npm install
-RUN npm install @discordjs/opus
 
 # Our precious bot
 COPY . /usr/src/bot

@@ -1,12 +1,11 @@
 FROM node:latest
 
-#Grab the latest code from master
-RUN CD /home/bsamsom/github/Discord_Bot
-RUN git pull
-
 # Create the directory!
 RUN mkdir -p /usr/src/bot
 WORKDIR /usr/src/bot
+
+#Grab the latest code from master
+RUN git pull
 
 # Copy and Install our bot
 COPY package.json /usr/src/bot

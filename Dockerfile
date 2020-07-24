@@ -1,6 +1,7 @@
 FROM node:latest
 
 #Grab the latest code from master
+RUN CD /home/bsamsom/github/Discord_Bot
 RUN git pull
 
 # Create the directory!

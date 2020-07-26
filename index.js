@@ -1,4 +1,5 @@
 const discord = require('discord.js');
+const { RedisClient } = require('discord.js-redis');
 const fs = require('fs');
 const { sep } = require('path');
 const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons } = require('./config.json');
@@ -6,9 +7,12 @@ const cron = require('node-cron');
 //const prefix = process.env.config;
 
 const client = new discord.Client();
+const redis = new RedisClient(client, {});
 client.queue = new Map();
 client.commands = new discord.Collection();
 
+redis.on('ready', () => console.log('Redis ready!'));
+client.on('ready', () => console.log('Discord ready!'));
 
 const load = (dir = './commands/') => {
 	fs.readdirSync(dir).forEach(dirs => {

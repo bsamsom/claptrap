@@ -1,0 +1,9 @@
+version: '3'
+services:
+    Discord_bot:
+        build: .
+        restart: always
+        depends_on:
+        - redis
+    redis:
+        image: redis:3.0-alpine

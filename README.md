@@ -7,6 +7,7 @@ install ffmpeg
 install node
 install npm
 install docker
+install docker-compose
 npm install
 ```
 

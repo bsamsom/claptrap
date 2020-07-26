@@ -2,12 +2,10 @@
 1. install on Linux:
 clone repo
 ```
-install python
-install ffmpeg
-install node
-install npm
-install docker
-install docker-compose
+brew install python
+brew install ffmpeg
+brew install node
+apt install npm
 npm install
 ```
 

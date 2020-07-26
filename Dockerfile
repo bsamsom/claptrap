@@ -1,19 +1,17 @@
-FROM alpine:latest
+FROM node:latest
 
-# Setup Work directory.
+# Create the directory!
+RUN mkdir -p /usr/src/bot
 WORKDIR /usr/src/bot
-COPY package.json settings.json ./
 
-# install stuff
-RUN apk add --update \
-    && apk add --no-cache nodejs-current nodejs-npm \
-    && apk add --no-cache --virtual .build git curl build-base g++ \
-    && npm install \
-    && apk del .build
+# Copy and Install our bot
+COPY package.json /usr/src/bot
+RUN npm install
 
-# Copy project to our WORKDIR
-COPY . .
+# Our precious bot
+COPY . /usr/src/bot
 
-# run the bot
-CMD [ "node", "bot.js" ]
+# Start me!
+CMD ["node", "index.js"]
+
 

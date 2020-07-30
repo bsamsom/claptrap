@@ -2,12 +2,16 @@ const discord = require('discord.js');
 const fs = require('fs');
 const { sep } = require('path');
 const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons } = require('./config.json');
-const cron = require('node-cron');
+const CronJob = require('cron').CronJob;
+//const { RedisClient } = require('@puyodead1/discord.js-redis');
 //const prefix = process.env.config;
 
 const client = new discord.Client();
+//const redis = new RedisClient(client, {});
 client.queue = new Map();
 client.commands = new discord.Collection();
+
+
 
 
 const load = (dir = './commands/') => {
@@ -42,6 +46,9 @@ client.on('ready', () => {
 	//channel.send(val);
 
 });
+//redis.on('ready', () => {
+//	console.log('Redis ready!');
+//});
 
 client.on('message', (message) => {
 	messageContains(message);
@@ -92,15 +99,20 @@ function messageContains(message) {
 function includes(message, val) {return message.content.includes(val);}
 
 function scheduledTask() {
-	cron.schedule('0 0 12 * * Wednesday', function() {
+	//https://github.com/kelektiv/node-cron
+	// second(0-59), minute(0-59), hour(0-23), day(1-31), month(0-11), day of week(0-6)[sun-sat]
+	const job = new CronJob('0 0 12 * * 3', function() {
 		const guild = client.guilds.cache.get(guild_id);
-		const channel = guild.channels.cache.get(hubot_testing);
+		const channel = guild.channels.cache.get(dungeons_and_dragons);
+		//const channel = guild.channels.cache.get(hubot_testing);
 		const args = [ 'schedule', 'next' ];
 		const command = args.shift().toLowerCase();
 		client.commands.get(command).execute(channel, args);
 	},{
 		timezone: "America/Chicago"
 	});
+	job.start()
+
 }
 
 client.login(token);

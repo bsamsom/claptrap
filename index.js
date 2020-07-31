@@ -3,16 +3,31 @@ const fs = require('fs');
 const { sep } = require('path');
 const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons } = require('./config.json');
 const CronJob = require('cron').CronJob;
-//const { RedisClient } = require('@puyodead1/discord.js-redis');
-//const prefix = process.env.config;
+const redis = require('redis');
 
 const client = new discord.Client();
-//const redis = new RedisClient(client, {});
+const redis_client = redis.createClient({ host: 'redis', port: 6379});
+//https://www.npmjs.com/package/redis
+
 client.queue = new Map();
 client.commands = new discord.Collection();
 
+client.on('ready', () => {
+	console.log('Connected as ' + client.user.tag);
+	client.user.setActivity('The Echonet', { type: 'WATCHING' });
+	//const guild = client.guilds.cache.get(guild_id);
+	//const channel = guild.channels.cache.get(hubot_testing);
+	//channel.send(val);
 
-
+});
+redis_client.on('ready', () => {
+	console.log('Redis connected.');
+});
+redis_client.on("error", function(error) {
+	console.error(error);
+	//redis_client.set("key", "value", redis.print);
+	//redis_client.get("key", redis.print);  
+});
 
 const load = (dir = './commands/') => {
 	fs.readdirSync(dir).forEach(dirs => {
@@ -37,18 +52,6 @@ client.on('guildMemberAdd', member => {
 	if (!channel) return;
 	channel.send(`Welcome ${member}!`);
 });
-
-client.on('ready', () => {
-	console.log('Connected as ' + client.user.tag);
-	client.user.setActivity('The Echonet', { type: 'WATCHING' });
-	//const guild = client.guilds.cache.get(guild_id);
-	//const channel = guild.channels.cache.get(hubot_testing);
-	//channel.send(val);
-
-});
-//redis.on('ready', () => {
-//	console.log('Redis ready!');
-//});
 
 client.on('message', (message) => {
 	messageContains(message);

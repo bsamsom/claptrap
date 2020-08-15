@@ -111,11 +111,13 @@ function scheduledTask() {
 		const args = [ 'schedule', 'next' ];
 		const command = args.shift().toLowerCase();
 		client.commands.get(command).execute(channel, args);
-	},{
-		timezone: "America/Chicago"
-	});
-	job.start()
-
+	},
+		null, true, 'America/Winnipeg'
+	);
+	job.start();
+	
+	time = new Date(job.nextDates(1));
+	console.log(time);
 }
 
 client.login(token);

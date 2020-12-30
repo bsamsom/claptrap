@@ -6,19 +6,10 @@ module.exports = {
 	usage: '',
 	guildOnly: true,
 	execute(message) {
-		const serverQueue = message.client.queue.get(message.guild.id);
-		if (serverQueue && serverQueue.playing) {
-			serverQueue.playing = false;
-			serverQueue.connection.dispatcher.end();
-			serverQueue.songs = [];
-			message.client.queue = new Map();
-			message.channel.send(':octagonal_sign: Stopped all music.');
-			return false;
-		}
-		else{
-			message.channel.send('There is nothing playing.');
-			return false;
-		}
-
+		try{
+			client = message.client;
+			client.player.stop(message.guild.id);
+			message.channel.send('Music stopped, the Queue was cleared!');
+		} catch(e){ console.log("error stopping song:", e) }
 	},
 };

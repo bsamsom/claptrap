@@ -10,10 +10,12 @@ EXPOSE 6379
 
 # Let's install requirements
 RUN apk add --update \
-    && apk add --no-cache nodejs-current nodejs-npm \
+    && apk add --no-cache nodejs-current nodejs-npm ffmpeg \
     && apk add --no-cache --virtual .build git curl build-base g++ \
     && npm install \
     && apk del .build
+
+RUN npm install ffmpeg
 
 # Copy project to our WORKDIR
 COPY . .

@@ -4,13 +4,17 @@ const { sep } = require('path');
 const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons } = require('./config.json');
 const CronJob = require('cron').CronJob;
 const redis = require('redis');
+const { Player } = require("discord-music-player");
 
 const client = new discord.Client();
 const redis_client = redis.createClient({ host: 'redis', port: 6379});
 //https://www.npmjs.com/package/redis
 
-client.queue = new Map();
 client.commands = new discord.Collection();
+const player = new Player(client, {
+	leaveOnEmpty: true, // This options are optional.
+});
+client.player = player;
 
 client.on('ready', () => {
 	console.log('Connected as ' + client.user.tag);

@@ -6,14 +6,10 @@ module.exports = {
 	usage: '',
 	guildOnly: true,
 	async execute(message) {
-		const serverQueue = message.client.queue.get(message.guild.id);
-		if (serverQueue && serverQueue.playing) {
-			serverQueue.playing = false;
-			serverQueue.connection.dispatcher.pause();
-			return message.channel.send("⏸ Paused: " + serverQueue.songs[0].title);
-		}
-		else{
-			return message.channel.send('There is nothing playing.');
-		}
+		try{
+			client = message.client;
+			let song = await client.player.pause(message.guild.id);
+			message.channel.send(`${song.name} was paused!`);
+		} catch(e){ console.log("error pausing song:", e) }
 	},
 };

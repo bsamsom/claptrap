@@ -1,4 +1,3 @@
-const ytdl = require('ytdl-core-discord');
 const opus = require('@discordjs/opus');
 
 module.exports = {
@@ -23,16 +22,18 @@ module.exports = {
 				return message.channel.send('Missing Song URL');
 			}
 
-			let isPlaying = client.player.isPlaying(message.guild.id);
+			let isPlaying = await client.player.isPlaying(message.guild.id);
+			song_to_add = String(args[1]);
+			console.log(song_to_add);
 			// If there's already a song playing
 			if(isPlaying){
 				// Add the song to the queue
-				let song = await client.player.addToQueue(message.guild.id, args.join(' '));
+				let song = await client.player.addToQueue(message.guild.id, song_to_add);
 				song = song.song;
 				message.channel.send(`${song.name} has been added to the queue!`);
 			} else {
 				// Else, play the song
-				let song = await client.player.play(voiceChannel, args.join(' '));
+				let song = await client.player.play(voiceChannel, song_to_add);
 				song = song.song;
 				message.channel.send(`Started playing ${song.name}!`);
 			}

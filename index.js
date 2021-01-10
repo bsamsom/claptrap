@@ -1,20 +1,20 @@
 const discord = require('discord.js');
 const fs = require('fs');
 const { sep } = require('path');
-const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons } = require('./config.json');
+const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons, bot_id } = require('./config.json');
 const CronJob = require('cron').CronJob;
-const redis = require('redis');
 const { Player } = require("discord-music-player");
+const interactions = require("discord-slash-commands-client");
 
 const client = new discord.Client();
-const redis_client = redis.createClient({ host: 'redis', port: 6379});
-//https://www.npmjs.com/package/redis
 
 client.commands = new discord.Collection();
 const player = new Player(client, {
 	leaveOnEmpty: true, // This options are optional.
 });
 client.player = player;
+
+client.interactions = new interactions.Client(token,bot_id);
 
 client.on('ready', () => {
 	console.log('Connected as ' + client.user.tag);
@@ -23,14 +23,6 @@ client.on('ready', () => {
 	//const channel = guild.channels.cache.get(hubot_testing);
 	//channel.send(val);
 
-});
-redis_client.on('ready', () => {
-	console.log('Redis connected.');
-});
-redis_client.on("error", function(error) {
-	console.error(error);
-	//redis_client.set("key", "value", redis.print);
-	//redis_client.get("key", redis.print);  
 });
 
 const load = (dir = './commands/') => {
@@ -42,6 +34,14 @@ const load = (dir = './commands/') => {
 		// We make a pull to that file so we can add it the bot.commands collection
 			const pull = require(`${dir}/${dirs}/${file}`);
 			client.commands.set(pull.name, pull);
+			
+			//https://github.com/MatteZ02/discord-interactions#readme
+			client.interactions.createCommand({
+			  name: pull.name,
+			  description: pull.description,
+			})
+			//.then(console.log)
+			.catch(console.error);
 		}
 	});
 };
@@ -55,6 +55,12 @@ client.on('guildMemberAdd', member => {
 	const channel = member.guild.channels.find(c => c.name === 'general');
 	if (!channel) return;
 	channel.send(`Welcome ${member}!`);
+});
+
+client.on("interactionCreate", (interaction) => {
+	if (interaction.name === "ping") {
+		interaction.channel.send("pong");
+	}
 });
 
 client.on('message', (message) => {

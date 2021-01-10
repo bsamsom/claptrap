@@ -2,8 +2,8 @@
 1. install on Linux:
 clone repo
 ```
-#install node
-#install npm
+install node
+install npm
 install docker
 install docker-compose
 npm install
@@ -20,7 +20,7 @@ npm install
 }
 ```
 
-Docker-compose
+## Docker-compose
 Start Bot(-d is to run in the background): 
 ```
 docker-compose up -d
@@ -36,4 +36,26 @@ docker-compose rm -f
 Stop the Bot(if you ran it with -d) 
 ```
 docker-compose down
+```
+
+## Runing locally for development:
+
+install node 14+ on linux:
+```
+$ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
+$ sudo bash nodesource_setup.sh   
+```
+install ffmpg:
+```
+$ sudo apt install ffmpeg                                              
+```
+
+install packages:
+```
+$ npm install
+```
+
+```
+npm run start
+npm run debug
 ```

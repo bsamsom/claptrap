@@ -1,4 +1,5 @@
 const opus = require('@discordjs/opus');
+const Discord = require('discord.js');
 
 module.exports = {
 	name: 'play',
@@ -26,18 +27,22 @@ module.exports = {
 			song_to_add = String(args[1]);
 			console.log(song_to_add);
 			// If there's already a song playing
-			if(isPlaying){
-				// Add the song to the queue
-				let song = await client.player.addToQueue(message.guild.id, song_to_add);
-				song = song.song;
-				message.channel.send(`${song.name} has been added to the queue!`);
-			} else {
-				// Else, play the song
-				let song = await client.player.play(voiceChannel, song_to_add);
-				song = song.song;
-				message.channel.send(`Started playing ${song.name}!`);
-			}
-		
+			const { song, error } = await (
+				client.player.isPlaying(message.guild.id) ?
+					client.player.addToQueue(message.guild.id, song_to_add, {}, message.author.tag) :
+					client.player.play(voiceChannel, song_to_add, {}, message.author.tag)
+			);
+			if(error) return message.channel.send(JSON.stringify(error));
+			if(!song) return message.channel.send('Song not found (probably a bug?)');
+			return message.channel.send(
+				exampleEmbed = new Discord.MessageEmbed()
+				.setTitle(song.name)
+				.setDescription(`Author: ${song.author}\nDuration: ${song.duration}\nRequested by: ${song.requestedBy}`)
+				.setURL(song.url)
+				.setImage(song.thumbnail)
+				.setTimestamp()
+			)
+
 		} catch(e){ console.log("error adding song:", e) }
 	}
 };

@@ -1,19 +1,6 @@
 version: '3'
 services:
-    redis:
-        container_name: discord_redis
-        image: redis:3.0-alpine
-        command: [ "redis-server"]
-        networks:
-            - redis-net
     bot:
         container_name: discord_bot
         build: .
         restart: always
-        depends_on:
-            - redis
-        networks:
-            - redis-net
-networks:
-    redis-net:
-        driver: bridge

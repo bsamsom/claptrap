@@ -11,7 +11,7 @@ module.exports = {
 			client = message.client;
 			let queue = await client.player.getQueue(message.guild.id);
 			message.channel.send('Queue:\n'+(queue.songs.map((song, i) => {
-				return `${i === 0 ? 'Now Playing' : `#${i+1}`} - ${song.name} | ${song.author}`
+				return `#${i+1} - ${song.name} | ${song.author}`
 			}).join('\n')));
 		} catch(e){ console.log("error listing song queue:", e) }
 	},

@@ -6,7 +6,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "cron": "^1.8.2",
-    "discord-music-player": "^6.3.5",
+    "discord-music-player": "^6.4.1",
     "discord-slash-commands-client": "^1.1.0",
     "discord.js": "^12.5.1",
     "easy-table": "^1.1.1",

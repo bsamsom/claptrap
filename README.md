@@ -38,23 +38,32 @@ Stop the Bot(if you ran it with -d)
 docker-compose down
 ```
 
-## Runing locally for development:
+## Dependencies/Setup:
 
-install node 14+ on linux:
+Install node 14+ on Linux:
 ```
 $ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 $ sudo bash nodesource_setup.sh   
 ```
-install ffmpg:
+Install node 14+ on Windows:
+```
+https://nodejs.org/en/download/current/
+```
+
+Install FFMPEG on Linux:
 ```
 $ sudo apt install ffmpeg                                              
 ```
+
+install npm packages on Windows
+https://github.com/nodejs/node-gyp#on-windows
 
 install packages:
 ```
 $ npm install
 ```
 
+## Runing locally for development:
 ```
 npm run start
 npm run debug

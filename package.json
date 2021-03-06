@@ -7,21 +7,20 @@
     "@discordjs/opus": "^0.3.3",
     "cron": "^1.8.2",
     "discord-music-player": "^6.4.1",
-    "discord-slash-commands-client": "^1.1.0",
     "discord.js": "^12.5.1",
     "easy-table": "^1.1.1",
     "google-spreadsheet": "^2.0.8",
     "node-cmd": "^4.0.0",
     "node-fetch": "^2.6.1",
     "node-forge": "^0.10.0",
-    "opusscript": "0.0.7",
-    "os": "^0.1.1"
+    "opusscript": "^0.0.7",
+    "os": "^0.1.1",
+    "ytdl-core": "^4.5.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "none",
-    "debug": "node debug index.js",
-    "start": "node index.js"
+    "debug": "node debug claptrap.js",
+    "start": "node claptrap.js"
   },
   "repository": {
     "type": "git",

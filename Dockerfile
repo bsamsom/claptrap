@@ -17,5 +17,5 @@ RUN npm install ffmpeg
 # Copy project to our WORKDIR
 COPY . .
 
-CMD [ "node", "index.js" ]
+CMD [ "node", "claptrap.js" ]
 

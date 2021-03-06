@@ -15,10 +15,11 @@ module.exports = {
 			channel = message;
 		}
         data = new Table;
+	process.env.TZ = 'America/Winnipeg';
         cron.cronJobs.forEach(cronjob => {
             time = new Date(cronjob.cron.nextDates(1));
             data.cell('Cron Name', cronjob.name);
-            data.cell('Next Run Time', time.toLocaleString());
+            data.cell('Next Run Time', time.toLocaleString('en-US'));
             data.newRow();	
         });
         channel.send('```' + data.toString() + '```');

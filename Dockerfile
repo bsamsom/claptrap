@@ -1,6 +1,6 @@
 FROM node:15.11.0-alpine3.10    
 
-ENV TZ=America/Mexico_City
+ENV TZ = America/Winnipeg
 
 # install mininiumal requirements
 RUN apk add --update \

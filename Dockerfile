@@ -1,20 +1,29 @@
-FROM alpine:latest
-    
-# Setup Work directory.
-WORKDIR /usr/src/bot
-#copy required files
-COPY package.json config.json client_secret.json ./
+FROM node:15.11.0-alpine3.10    
 
-# Let's install requirements
+ENV TZ=America/Mexico_City
+
+# install mininiumal requirements
 RUN apk add --update \
-    && apk add --no-cache nodejs-current nodejs-npm ffmpeg \
-    && apk add --no-cache --virtual .build git curl build-base g++ \
-    && npm install \
-    && apk del .build
+    && apk add --no-cache \
+        ffmpeg \
+        python \
+        make \
+        g++ \
+        tzdata \
+    && rm -rf /var/cache/apk/*
 
-RUN npm install ffmpeg
+# create working dir
+WORKDIR /usr/src/bot
 
-# Copy project to our WORKDIR
+#copy required setup files
+COPY package.json ./
+COPY package-lock.json ./
+COPY config.json ./
+COPY client_secret.json ./
+
+RUN npm install --production
+
+# Copy everything else
 COPY . .
 
 CMD [ "node", "claptrap.js" ]

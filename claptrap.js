@@ -92,6 +92,8 @@ function messageContains(message) {
 	if(includes(message, 'died') || includes(message, 'death') || includes(message, 'kill') || includes(message, 'die')) {
 		message.react('☠');
 	}
+	if(includes(message, '?')) { message.react('⁉️'); }
+	
 }
 function includes(message, val) {return message.content.includes(val);}
 

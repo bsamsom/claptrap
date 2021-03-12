@@ -10,6 +10,9 @@ module.exports = {
 			client = message.client;
             client.player.shuffle(message.guild.id);
             message.channel.send('Server Queue was shuffled.');
-		} catch(e){ console.log("error shuffling Server Queue", e) }
+            const args = [ 'queue'];
+            const command = args.shift().toLowerCase();
+            client.commands.get(command).execute(message);
+		} catch(e){ console.log("Error shuffling Server Queue", e) }
 	},
 };

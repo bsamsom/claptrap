@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 
 module.exports = {
 	name: 'play',
-	description: 'Play a song in your current voice channel.',
+	description: 'Play a song in your current voice channel(youtube/spotify).',
 	aliases: [''],
 	args: false,
 	usage: '<url>',
@@ -12,16 +12,12 @@ module.exports = {
 		try {
 			client = message.client;
 			ssearch = String(message.content);
-			const regex = /!play/i;
-			ssearch.replace(regex, '');		
+			const regex = /!play /i;
+			//console.log("before replace",ssearch);
+			ssearch = ssearch.replace(regex, '');		
+			//console.log("after replace",ssearch);
 			
 			const args = message.content.split(' ');
-			ssearch = ""
-			for (i = 0; i < args.length;i++){
-				if(!args[i].includes('!play')){
-					ssearch += args[i] + " ";
-				}
-			}
 
 			const voiceChannel = message.member.voice.channel;
 			if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!');
@@ -30,7 +26,14 @@ module.exports = {
 				return message.channel.send('I need the permissions to join and speak in your voice channel!');
 			}
 			if (!args[1]) {
-				return message.channel.send('Missing Song URL');
+				let isPlaying = client.player.isPlaying(message.guild.id);
+				if(isPlaying){
+					let song = await client.player.resume(message.guild.id);
+					return message.channel.send(`${song.name} was resumed!`); 
+				}
+				else{ 
+					return message.channel.send('Missing Song URL'); 
+				}
 			}
 
 			let isPlaying = await client.player.isPlaying(message.guild.id);

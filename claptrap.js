@@ -9,6 +9,8 @@ const client = new discord.Client();
 client.commands = new discord.Collection();
 const player = new Player(client, {
 	leaveOnEmpty: true, // This options are optional.
+	leaveOnEnd: true,
+	quality: 'high'
 });
 client.player = player;
 

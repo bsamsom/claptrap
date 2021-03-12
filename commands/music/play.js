@@ -34,7 +34,7 @@ module.exports = {
 			}
 
 			let isPlaying = await client.player.isPlaying(message.guild.id);
-			if(args.length < 2){
+			if(args.length <= 2){
 				song_to_add = String(args[1]);
 			}
 			else{

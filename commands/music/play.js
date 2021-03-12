@@ -11,7 +11,17 @@ module.exports = {
 	async execute(message) {
 		try {
 			client = message.client;
+			ssearch = String(message.content);
+			const regex = /!play/i;
+			ssearch.replace(regex, '');		
+			
 			const args = message.content.split(' ');
+			ssearch = ""
+			for (i = 0; i < args.length;i++){
+				if(!args[i].includes('!play')){
+					ssearch += args[i] + " ";
+				}
+			}
 
 			const voiceChannel = message.member.voice.channel;
 			if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!');
@@ -24,7 +34,13 @@ module.exports = {
 			}
 
 			let isPlaying = await client.player.isPlaying(message.guild.id);
-			song_to_add = String(args[1]);
+			if(args.length < 2){
+				song_to_add = String(args[1]);
+			}
+			else{
+				song_to_add = ssearch;
+			}
+			
 			console.log(song_to_add);
 			// If there's already a song playing
 			const { song, error } = await (

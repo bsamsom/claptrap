@@ -1,19 +1,18 @@
-const GoogleSpreadsheet = require('google-spreadsheet');
+//const GoogleSpreadsheet = require('google-spreadsheet');
 const creds = require('../../client_secret.json');
-const env = require('../../config.json');
+const config = require('../../config.json');
 const Table = require('easy-table');
 
-// Create a document object using the ID of the spreadsheet - obtained from its URL.
-const doc = new GoogleSpreadsheet(env.SPREADSHEET_ID);
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 module.exports = {
 	name: 'schedule',
-	description: 'Displays the D&D schedule.',
+	description: 'Displays a schedule pulled from a google spreadsheet',
 	aliases: [''],
 	args: true,
 	usage: '<full|upcoming|next>',
 	guildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		let channel = '';
 		if(message.channel) {
 			channel = message.channel;
@@ -21,77 +20,95 @@ module.exports = {
 		else{
 			channel = message;
 		}
-		// Authenticate with the Google Spreadsheets API.
-		doc.useServiceAccountAuth(creds, function() {
-			// Get all of the rows from the spreadsheet.
-			const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-			const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-			doc.getRows(1, function(err, rows) {
-				const BreakException = {};
-				var data = new Table;
-				try {
-					rows.forEach(row => {
-						const brent = new Date(row.brentscampaign);
-						const anil 	= new Date(row.anilscampaign);
-						var b 		= days[brent.getDay()] + ' ' + months[brent.getMonth()] + ' ' + brent.getDate();
-						var a 		= days[anil.getDay()] + ' ' + months[anil.getMonth()] + ' ' + anil.getDate();
-						var btime 	= row._cokwr;
-						var atime 	= row._cre1l;
-
-						if( brent == "Invalid Date"){
-							b 		= "No Session"
-							btime 	= "No Session"
-						}
-						if( anil == "Invalid Date"){
-							a 		= "No Session"
-							atime 	= "No Session"
-						}
-
-						if (args[0] == 'full') {
-							data = setData(data, b, btime, a, atime, channel);
-						}
-						else if (args[0] == 'upcoming') {
-							if (brent > Date.now() || anil > Date.now()) {
-								data = setData(data, b, btime, a, atime, channel);
-							}
-						}
-						else if (args[0] == 'next') {
-							if (brent > Date.now() || anil > Date.now()) {
-								data = setData(data, b, btime, a, atime, channel);
-								throw BreakException;
-							}
-						}
-					});
-				}
-				catch (e) {
-					// used to end early on next
-				}
-				channel.send('```' + data.toString() + '```');
+		if(!config.SPREADSHEET_ID){
+			return message.channel.send("Missing Spreadsheet for pulling a schedule");
+		}
+		const doc = new GoogleSpreadsheet(config.SPREADSHEET_ID);
+		try {
+			await doc.useServiceAccountAuth({
+				client_email: creds.client_email,
+				private_key: creds.private_key,
 			});
-		});
+			await doc.loadInfo(); // loads document properties and worksheets
+			const sheet = doc.sheetsByIndex[0]; 
+			const rows = await sheet.getRows();
+			
+			header1=rows[0]._sheet.headerValues[0];
+			header2=rows[0]._sheet.headerValues[2];
+			//console.log(header1, header2);
+			const BreakException = {};
+			var data = new Table;
+			try {
+				rows.forEach(row => {
+					date1= row._rawData[0];
+					date2= row._rawData[2];
+					time1= row._rawData[1];
+					time2= row._rawData[3];
+
+					time1split = time1.split(":");// hours/mins
+					session1_date = new Date(date1);
+					if (time1split.length == 2){
+						session1_date.setHours(time1split[0]);//hours
+						session1_date.setMinutes(time1split[1]);//minutes
+					}
+
+					time2split = time2.split(":");// hours/mins
+					session2_date = new Date(date2);
+					if (time2split.length == 2){
+						session2_date.setHours(time2split[0]);//hours
+						session2_date.setMinutes(time2split[1]);//minutes
+					}	
+
+					if (args[0] == 'full') {
+						data = setData(data, header1, session1_date, header2, session2_date, channel);
+					}
+					else if (args[0] == 'upcoming') {
+						if (session1_date > Date.now() || session2_date > Date.now()) {
+							data = setData(data, header1, session1_date, header2, session2_date, channel);
+						}
+					}
+					else if (args[0] == 'next') {
+						if (session1_date > Date.now() || session2_date > Date.now()) {
+							data = setData(data, header1, session1_date, header2, session2_date, channel);
+							throw BreakException;
+						}
+					}
+				});
+			}
+			catch (e) {
+				// used to end early on next
+			}
+			channel.send('```' + data.toString() + '```');
+		} catch (e) {
+			console.log(e.Error)
+			// Deal with the fact the chain failed
+		}
 	},
 };
 
-function setData(data, bday, btime, aday, atime, channel) {
+function setData(data, header1, session1, header2, session2, channel) {
+	time1 = session1.toLocaleTimeString();
+	time2 = session2.toLocaleTimeString();
+	if(time1 == '12:00:00 a.m.'){ time1 = "No Session"; };
+	if(time2 == '12:00:00 a.m.'){ time2 = "No Session"; };
 	//char limit 2,000
-	var test1 = "" + bday + btime + aday + atime;
-	var test2 = "Brents D&D Campaign  Brents Start Time  |  Anils D&D Campaign  Anils Start Time ";
+	var test1 = "" + session1.toDateString() + session1.toLocaleTimeString() + session2.toDateString() + session2.toLocaleTimeString();
+	var test2 = `${header1}  Start Time  |  ${header2}  Start Time `;
 	var max = 0;
 	if(test1 > max); max = test1.length;
 	if(test2 > max); max = test2.length;
-	//console.log("max", max);
 	if(data.toString().length + max > 1900){
-		//channel.send('```' + temp.toString() + '```');
-		//console.log("temp", data.toString().length + max);
 		channel.send('```' + data.toString() + '```');
 		data = new Table;
 	}
 
-	data.cell('Brents D&D Campaign', bday);
-	data.cell('Brents Start Time', btime);
+	name1 = header1.split(' ');
+	name2 = header2.split(' ');
+	data.cell(`${header1}`, session1.toDateString());
+	data.cell(`${name1[0]} Start Time`, time1);
 	data.cell('|', '|');
-	data.cell('Anils D&D Campaign', aday);
-	data.cell('Anils Start Time', atime);
+	data.cell(`${header2}`, session2.toDateString());
+	data.cell(`${name2[0]} Start Time`, time2);
 	data.newRow();	
 	return data;
 }

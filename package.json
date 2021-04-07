@@ -9,12 +9,14 @@
     "discord-music-player": "^6.4.1",
     "discord.js": "^12.5.1",
     "easy-table": "^1.1.1",
-    "google-spreadsheet": "^2.0.8",
+    "google-spreadsheet": "^3.1.15",
+    "google-spreadsheet-to-json": "^1.0.0",
     "node-cmd": "^4.0.0",
     "node-fetch": "^2.6.1",
     "node-forge": "^0.10.0",
     "opusscript": "^0.0.7",
     "os": "^0.1.1",
+    "spreadsheet-to-json": "^2.0.0",
     "ytdl-core": "^4.5.0"
   },
   "scripts": {

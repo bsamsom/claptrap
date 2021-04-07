@@ -18,10 +18,10 @@ WORKDIR /usr/src/bot
 #copy required setup files
 COPY package.json ./
 COPY package-lock.json ./
+RUN npm install --production
+
 COPY config.json ./
 COPY client_secret.json ./
-
-RUN npm install --production
 
 # Copy everything else
 COPY . .

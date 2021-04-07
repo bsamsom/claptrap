@@ -1,4 +1,3 @@
-//const GoogleSpreadsheet = require('google-spreadsheet');
 const creds = require('../../client_secret.json');
 const config = require('../../config.json');
 const Table = require('easy-table');

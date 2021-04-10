@@ -88,8 +88,8 @@ module.exports = {
 function setData(data, header1, session1, header2, session2, channel) {
 	time1 = session1.toLocaleTimeString();
 	time2 = session2.toLocaleTimeString();
-	if(time1 == '12:00:00 a.m.'){ time1 = "No Session"; };
-	if(time2 == '12:00:00 a.m.'){ time2 = "No Session"; };
+	if(time1 == '12:00:00 AM'){ time1 = "No Session"; };
+	if(time2 == '12:00:00 AM'){ time2 = "No Session"; };
 	//char limit 2,000
 	var test1 = "" + session1.toDateString() + session1.toLocaleTimeString() + session2.toDateString() + session2.toLocaleTimeString();
 	var test2 = `${header1}  Start Time  |  ${header2}  Start Time `;

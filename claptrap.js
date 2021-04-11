@@ -50,7 +50,7 @@ client.on('guildMemberAdd', member => {
 });
 
 client.on('message', (message) => {
-	messageContains(message);
+	//messageContains(message);
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 

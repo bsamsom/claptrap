@@ -1,5 +1,6 @@
 const opus = require('@discordjs/opus');
 const Discord = require('discord.js');
+const config = require('../../config.json');
 
 module.exports = {
 	name: 'play',
@@ -26,9 +27,9 @@ module.exports = {
 				return message.channel.send('I need the permissions to join and speak in your voice channel!');
 			}
 			if (!args[1]) {
-				let isPlaying = client.player.isPlaying(message.guild.id);
+				let isPlaying = client.player.isPlaying(message);
 				if(isPlaying){
-					let song = await client.player.resume(message.guild.id);
+					let song = await client.player.resume(message);
 					return message.channel.send(`${song.name} was resumed!`); 
 				}
 				else{ 
@@ -36,22 +37,35 @@ module.exports = {
 				}
 			}
 
-			let isPlaying = await client.player.isPlaying(message.guild.id);
-			if(args.length <= 2){
-				song_to_add = String(args[1]);
+			if(args.length <= 2){ song_to_add = String(args[1]); }
+			else{ song_to_add = ssearch; }
+
+			if(song_to_add.includes('spotify.com/playlist')) { 
+				// user requests a spotify playlist not a song.
+				// note youtube playlist are fine, spotify cause:	
+				/* node:internal/process/promises:245
+						triggerUncaughtException(err, true  fromPromise );
+				Error [ERR_UNHANDLED_ERROR]: Unhandled error. ('SearchIsNull')
+					at new NodeError (node:internal/errors:329:5)
+					at Player.emit (node:events:367:17)
+					at Player.play (C:\Users\ben samsom\Documents\claptrap\node_modules\discord-music-player\src\Player.js:112:18)
+					at processTicksAndRejections (node:internal/process/task_queues:94:5) {
+				code: 'ERR_UNHANDLED_ERROR',
+				context: 'SearchIsNull'
+				} */
+				command = "```" + `${config.prefix}playlist ${song_to_add}` + "```"
+				return message.channel.send(`This is a playlist not a song, try ${command}`);  
 			}
-			else{
-				song_to_add = ssearch;
-			}
-			
+
 			console.log(song_to_add);
 			// If there's already a song playing
 			let song = '';
+
 			client.player.isPlaying(message) ?
 				song = client.player.addToQueue(message, song_to_add, {}, message.author.tag) :
 				song = client.player.play(message, song_to_add, {}, message.author.tag);
 			if(!song) return message.channel.send('Song not found (probably a bug?)');
 
-		} catch(e){ console.log("error adding song:", e) }
+		} catch(e){ console.log("error adding song(2):", e) }
 	}
 };

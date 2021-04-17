@@ -6,7 +6,7 @@ module.exports = {
 	description: 'Play a playlist of songs in your current voice channel.',
 	aliases: [''],
 	args: true,
-	usage: '<url> <number of songs to add>(defualt is 20)',
+	usage: '<url> <number of songs to add>(default is 20)',
 	guildOnly: true,
 	async execute(message) {
 		try {

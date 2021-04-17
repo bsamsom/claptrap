@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message) {
 		try{
 			client = message.client;
-            let progressBar = client.player.createProgressBar(message.guild.id, 20);
+            let progressBar = client.player.createProgressBar(message, 20);
 			message.channel.send(progressBar);
 		} catch(e){ console.log("error showing progressBar:", e) }
 	},

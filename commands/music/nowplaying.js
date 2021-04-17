@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message) {
 		try{
 			client = message.client;
-			let song = await client.player.nowPlaying(message.guild.id);
+			let song = await client.player.nowPlaying(message);
 			message.channel.send(`${song.name} is currently playing!`);
 		} catch(e){ console.log("error listing playing song:", e) }
 	},

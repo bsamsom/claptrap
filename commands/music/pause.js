@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message) {
 		try{
 			client = message.client;
-			let song = await client.player.pause(message.guild.id);
+			let song = await client.player.pause(message);
 			message.channel.send(`${song.name} was paused!`);
 		} catch(e){ console.log("error pausing song:", e) }
 	},

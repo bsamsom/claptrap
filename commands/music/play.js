@@ -46,21 +46,11 @@ module.exports = {
 			
 			console.log(song_to_add);
 			// If there's already a song playing
-			const { song, error } = await (
-				client.player.isPlaying(message.guild.id) ?
-					client.player.addToQueue(message.guild.id, song_to_add, {}, message.author.tag) :
-					client.player.play(voiceChannel, song_to_add, {}, message.author.tag)
-			);
-			if(error) return message.channel.send(JSON.stringify(error));
+			let song = '';
+			client.player.isPlaying(message) ?
+				song = client.player.addToQueue(message, song_to_add, {}, message.author.tag) :
+				song = client.player.play(message, song_to_add, {}, message.author.tag);
 			if(!song) return message.channel.send('Song not found (probably a bug?)');
-			return message.channel.send(
-				exampleEmbed = new Discord.MessageEmbed()
-				.setTitle(song.name)
-				.setDescription(`Author: ${song.author}\nDuration: ${song.duration}\nRequested by: ${song.requestedBy}`)
-				.setURL(song.url)
-				.setImage(song.thumbnail)
-				.setTimestamp()
-			)
 
 		} catch(e){ console.log("error adding song:", e) }
 	}

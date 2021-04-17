@@ -8,7 +8,7 @@ module.exports = {
 	execute(message) {
 		try{
 			client = message.client;
-			client.player.stop(message.guild.id);
+			client.player.stop(message);
 			message.channel.send('Music stopped, the Queue was cleared!');
 		} catch(e){ console.log("error stopping song:", e) }
 	},

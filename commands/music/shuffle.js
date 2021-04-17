@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message) {
 		try{
 			client = message.client;
-            client.player.shuffle(message.guild.id);
+            client.player.shuffle(message);
             message.channel.send('Server Queue was shuffled.');
             const args = [ 'queue'];
             const command = args.shift().toLowerCase();

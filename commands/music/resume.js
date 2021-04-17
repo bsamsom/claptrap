@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message) {
 		try{
 			client = message.client;
-			let song = await client.player.resume(message.guild.id);
+			let song = await client.player.resume(message);
 			message.channel.send(`${song.name} was resumed!`);
 		} catch(e){ console.log("error resuming song:", e) }
 	},

@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message) {
 		try{
 			client = message.client;
-			let song = await client.player.skip(message.guild.id);
+			let song = await client.player.skip(message);
 			message.channel.send(`${song.name} was skipped!`);
 		} catch(e){ console.log("error skipping song:", e) }
 	},

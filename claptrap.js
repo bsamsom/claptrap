@@ -24,6 +24,17 @@ client.on('ready', () => {
 
 });
 
+//adding songs to queue 
+client.player.on('songAdd',  (message, queue, song) =>
+    message.channel.send(`**${song.name}** has been added to the queue!`))
+    .on('songFirst',  (message, song) =>
+    	message.channel.send(`**${song.name}** is now playing!`));
+//adding playlist
+client.player
+	.on('playlistAdd',  (message, queue, playlist) => 
+		message.channel.send(`${playlist.name} playlist with ${playlist.videoCount} songs has been added to the queue!`));
+	
+
 const load = (dir = './commands/') => {
 	fs.readdirSync(dir).forEach(dirs => {
 	// we read the commands directory for sub folders and filter the files with name with extension .js

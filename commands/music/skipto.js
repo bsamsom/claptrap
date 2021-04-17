@@ -9,8 +9,9 @@ module.exports = {
         const args = message.content.split(' ');
 		try{
 			client = message.client;
-            let song = await client.player.seek(message.guild.id, parseInt(args[1] * 1000));
-            message.channel.send(`Moved to ${args[1]} second of ${song.song.name}.`);
+            let song = await client.player.seek(message, parseInt(args[1] * 1000));
+			//console.log(song)
+            message.channel.send(`Moved to ${args[1]} second of ${song.name}.`);
 		} catch(e){ console.log(`Error moving to  ${args[1]}`, e) }
 	},
 };

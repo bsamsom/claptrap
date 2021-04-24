@@ -41,20 +41,11 @@ module.exports = {
 			else{ song_to_add = ssearch; }
 
 			if(song_to_add.includes('spotify.com/playlist')) { 
-				// user requests a spotify playlist not a song.
-				// note youtube playlist are fine, spotify cause:	
-				/* node:internal/process/promises:245
-						triggerUncaughtException(err, true  fromPromise );
-				Error [ERR_UNHANDLED_ERROR]: Unhandled error. ('SearchIsNull')
-					at new NodeError (node:internal/errors:329:5)
-					at Player.emit (node:events:367:17)
-					at Player.play (C:\Users\ben samsom\Documents\claptrap\node_modules\discord-music-player\src\Player.js:112:18)
-					at processTicksAndRejections (node:internal/process/task_queues:94:5) {
-				code: 'ERR_UNHANDLED_ERROR',
-				context: 'SearchIsNull'
-				} */
-				command = "```" + `${config.prefix}playlist ${song_to_add}` + "```"
-				return message.channel.send(`This is a playlist not a song, try ${command}`);  
+				// if they request a palylist, call the palylist command instead.
+				const args = [ 'playlist', song_to_add ];
+				const command = args.shift().toLowerCase();
+				client.commands.get(command).execute(message);
+				return message.channel.send(`This is a playlist, calling the playlist command for you.`);  
 			}
 
 			console.log(song_to_add);

@@ -68,3 +68,9 @@ $ npm install
 npm run start
 npm run debug
 ```
+
+## Supported languages:
+```
+javascript
+coffeescript
+```

@@ -5,6 +5,7 @@ const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons, bot_id } =
 const { Player } = require("discord-music-player");
 const crons = require('./crons');
 const client = new discord.Client();
+require("coffeescript/register");
 
 client.commands = new discord.Collection();
 const player = new Player(client, {
@@ -37,12 +38,11 @@ client.player
 
 const load = (dir = './commands/') => {
 	fs.readdirSync(dir).forEach(dirs => {
-	// we read the commands directory for sub folders and filter the files with name with extension .js
-		const commands = fs.readdirSync(`${dir}${sep}${dirs}${sep}`).filter(files => files.endsWith('.js'));
-		// we use for loop in order to get all the commands in sub directory
+		const commands = fs.readdirSync(`${dir}${sep}${dirs}${sep}`).filter(files => files.endsWith('.js') || files.endsWith('.coffee'));
 		for (const file of commands) {
 		// We make a pull to that file so we can add it the bot.commands collection
 			const pull = require(`${dir}/${dirs}/${file}`);
+			//console.log(pull.name, pull)
 			client.commands.set(pull.name, pull);
 		}
 	});

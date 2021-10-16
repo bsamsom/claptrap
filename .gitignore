@@ -16,6 +16,11 @@ client_secret.json
 /node_modules
 .package.swp
 
+# binary go files
+/commands/go/*
+!/commands/go//**/
+!/commands/go/*.*
+
 # linters
 .eslintcache/
 .eslintrc

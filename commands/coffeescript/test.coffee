@@ -1,6 +1,6 @@
 	
 execute = (message) ->
-	message.channel.send("hello from coffeescript");
+	message.channel.send("Hello World!, from Coffeescript!");
 
 module.exports = { 
 	name: 'test',

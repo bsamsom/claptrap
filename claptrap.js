@@ -3,7 +3,9 @@ const fs = require('fs');
 const { sep } = require('path');
 const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons, bot_id } = require('./config.json');
 const { Player } = require("discord-music-player");
+var exec = require('child_process').execFile;
 const crons = require('./crons');
+const path = require('path');
 const client = new discord.Client();
 require("coffeescript/register");
 
@@ -71,31 +73,47 @@ client.on('message', (message) => {
 	const commandName = args.shift().toLowerCase();
 
 	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-	if (!command) return;
-
-	if (command.guildOnly && message.channel.type !== 'text') {
-		return message.reply('I can\'t execute that command inside DMs!');
-	}
-
-	if (command.args && args.length == 1) {
-		let reply = `You didn't provide any arguments, ${message.author}!`;
-
-		if (command.usage) {
-			reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+	if (!command) {
+		GO_DIR = process.env.GO_DIR || `commands/go`;
+		var p = GO_DIR + "/" + commandName;
+		if(checkFileExistsSync(p)){
+			//file exists do something.
+			exec(p, function(err, data) {  
+				if(err){
+					message.reply('there was an error trying to execute that command!');
+				}
+				else{
+					message.channel.send(data.toString());
+				}                    
+			});  
 		}
-
-		return message.channel.send(reply);
+		else{
+			return;
+		}
 	}
-
-	try {
-		command.execute(message, args);
+	else {
+		if (command.guildOnly && message.channel.type !== 'text') {
+			return message.reply('I can\'t execute that command inside DMs!');
+		}
+	
+		if (command.args && args.length == 1) {
+			let reply = `You didn't provide any arguments, ${message.author}!`;
+	
+			if (command.usage) {
+				reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+			}
+	
+			return message.channel.send(reply);
+		}
+	
+		try {
+			command.execute(message, args);
+		}
+		catch (error) {
+			console.error(error);
+			message.reply('there was an error trying to execute that command!');
+		}
 	}
-	catch (error) {
-		console.error(error);
-		message.reply('there was an error trying to execute that command!');
-	}
-
-
 });
 
 function messageContains(message) {
@@ -109,5 +127,15 @@ function messageContains(message) {
 	
 }
 function includes(message, val) {return message.content.includes(val);}
+
+function checkFileExistsSync(filepath){
+	let flag = true;
+	try{
+	  fs.accessSync(filepath, fs.constants.F_OK);
+	}catch(e){
+	  flag = false;
+	}
+	return flag;
+  }
 
 client.login(token);

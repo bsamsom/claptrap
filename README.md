@@ -64,6 +64,11 @@ $ npm install
 ```
 
 ## Runing locally for development:
+run to build the go binaries that the docker file builds
+```
+cd commands/go && go build *.go
+```
+
 ```
 npm run start
 npm run debug
@@ -73,4 +78,5 @@ npm run debug
 ```
 javascript
 coffeescript
+go
 ```

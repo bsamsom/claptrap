@@ -4,3 +4,6 @@ services:
         container_name: discord_bot
         build: .
         restart: always
+        environment:
+            - GO_DIR=/usr/src/bot/commands/go
+            - TZ=America/Winnipeg

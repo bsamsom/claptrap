@@ -5,23 +5,24 @@
   "main": "index.js",
   "dependencies": {
     "@discordjs/opus": "^0.6.0",
-    "coffeescript": "^2.5.1",
+    "@discordjs/voice": "^0.6.0",
+    "coffeescript": "^2.6.1",
     "cron": "^1.8.2",
-    "discord-music-player": "^7.1.2",
-    "discord.js": "^12.5.1",
-    "easy-table": "^1.1.1",
+    "discord-music-player": "^8.2.0",
+    "discord.js": "^13.2.0",
+    "easy-table": "^1.2.0",
     "google-spreadsheet": "^3.1.15",
-    "node-cmd": "^4.0.0",
-    "node-fetch": "^2.6.1",
+    "node-cmd": "^5.0.0",
+    "node-fetch": "^3.0.0",
     "node-forge": "^0.10.0",
-    "opusscript": "^0.0.7",
-    "os": "^0.1.1",
-    "ytdl-core": "^4.5.0"
+    "opusscript": "^0.0.8",
+    "os": "^0.1.2",
+    "ytdl-core": "^4.9.1"
   },
   "scripts": {
     "test": "none",
-    "debug": "node debug claptrap.js",
-    "start": "node claptrap.js"
+    "debug": "node debug claptrap.js ",
+    "start": "node --trace-deprecation claptrap.js"
   },
   "repository": {
     "type": "git",

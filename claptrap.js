@@ -1,4 +1,4 @@
-const discord = require('discord.js');
+const { Client, Intents, Collection } = require('discord.js');
 const fs = require('fs');
 const { sep } = require('path');
 const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons, bot_id } = require('./config.json');
@@ -6,10 +6,20 @@ const { Player } = require("discord-music-player");
 var exec = require('child_process').execFile;
 const crons = require('./crons');
 const path = require('path');
-const client = new discord.Client();
+const client = new Client({
+	restRequestTimeout: 30000,
+	intents: [
+		Intents.FLAGS.GUILDS,
+		Intents.FLAGS.GUILD_MESSAGES,
+		Intents.FLAGS.GUILD_MEMBERS,
+		// Intents.FLAGS.MESSAGE_CREATE,
+		Intents.FLAGS.GUILD_PRESENCES,
+		Intents.FLAGS.DIRECT_MESSAGES
+	] 
+});
 require("coffeescript/register");
 
-client.commands = new discord.Collection();
+client.commands = new Collection();
 const player = new Player(client, {
 	leaveOnEmpty: true, // This options are optional.
 	leaveOnEnd: true,
@@ -62,7 +72,7 @@ client.on('guildMemberAdd', member => {
 	channel.send(`Welcome ${member}!`);
 });
 
-client.on('message', (message) => {
+client.on('messageCreate', (message) => {
 	//messageContains(message);
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -84,6 +94,7 @@ client.on('message', (message) => {
 				}
 				else{
 					message.channel.send(data.toString());
+					//message.channel.send(data.toString());
 				}                    
 			});  
 		}
@@ -92,7 +103,7 @@ client.on('message', (message) => {
 		}
 	}
 	else {
-		if (command.guildOnly && message.channel.type !== 'text') {
+		if (command.guildOnly && message.channel.type == 'DM') {
 			return message.reply('I can\'t execute that command inside DMs!');
 		}
 	
@@ -136,6 +147,11 @@ function checkFileExistsSync(filepath){
 	  flag = false;
 	}
 	return flag;
-  }
+}
+
 
 client.login(token);
+
+process.on("unhandledRejection", error => 
+	console.error("Promise rejection:", error)
+);

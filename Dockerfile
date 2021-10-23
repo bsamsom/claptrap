@@ -1,4 +1,4 @@
-FROM node:15.11.0-alpine3.10    
+FROM node:16.11.1-alpine3.12    
 
 # create working dir
 WORKDIR /usr/src/bot
@@ -10,7 +10,7 @@ RUN apk update && \
     apk upgrade && \
     apk add --no-cache \
         ffmpeg \
-        python \
+        python3 \
         make \
         g++ \
         tzdata \

@@ -12,11 +12,11 @@ const client = new Client({
 		Intents.FLAGS.GUILDS,
 		Intents.FLAGS.GUILD_MESSAGES,
 		Intents.FLAGS.GUILD_MEMBERS,
-		Intents.FLAGS.MESSAGE_CREATE,
-		Intents.FLAGS.VIEW_CHANNEL,
+		//Intents.FLAGS.MESSAGE_CREATE,
+		//Intents.FLAGS.VIEW_CHANNEL,
 		Intents.FLAGS.GUILD_PRESENCES,
-		Intents.FLAGS.DIRECT_MESSAGES, 
-		Intents.FLAGS.GUILD_VOICE_STATES
+		//Intents.FLAGS.DIRECT_MESSAGES, 
+		Intents.FLAGS.GUILD_VOICE_STATES,
 	] 
 });
 require("coffeescript/register");

@@ -1,3 +1,5 @@
+const { CommandInteractionOptionResolver } = require('discord.js');
+
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 module.exports = {
@@ -20,15 +22,23 @@ module.exports = {
 		}
 
 		//visit http://names.drycodes.com/ for more info
-		fetch(`http://names.drycodes.com/${number}?nameOptions=${gender}_names&separator=space&combine=${combine}`)
-			.then(res => res.json())
-			.then(json => {
-				message.channel.send(json);
-				return;
-			})
-			.catch(e => {
-				message.channel.send('Failed to deliver random name :sob:');
-				return console.error(e);
-			});
+		var url = `http://names.drycodes.com/${number}?nameOptions=${gender}_names&separator=space&combine=${combine}`;
+		console.log("url", url);
+		fetch(url, {
+			method: 'GET',
+			headers: { 
+				Accept: 'application/json' 
+			}
+		 })
+		.then(res => res.json())
+		.then(res => {
+			// as of discordjs cant post an array, needs to be a string.
+			message.channel.send(res.toString());
+			return;
+		})
+		.catch(e => {
+			message.channel.send('Failed to deliver random name :sob:');
+			return console.error(e);
+		});
 	},
 };

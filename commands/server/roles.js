@@ -8,8 +8,8 @@ module.exports = {
 	execute(message) {
 		message.guild.roles.fetch()
 		.then(allRoles => {
-			let printString = `There are ${allRoles.cache.size} roles: \n` + '```';
-			allRoles.cache.forEach((role) => {
+			let printString = `There are ${allRoles.size} roles: \n` + '```';
+			allRoles.forEach((role) => {
 				printString += role.name + '\n';
 			});
 			printString += '```';

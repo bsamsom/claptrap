@@ -6,10 +6,9 @@ module.exports = {
 	usage: '',
 	guildOnly: true,
 	async execute(message) {
-		try{
-			client = message.client;
-            let progressBar = client.player.createProgressBar(message, 20);
-			message.channel.send(progressBar);
-		} catch(e){ console.log("error showing progressBar:", e) }
+		client = message.client;
+		let guildQueue = client.player.getQueue(message.guild.id);
+		const ProgressBar = guildQueue.createProgressBar();
+		message.channel.send(ProgressBar);
 	},
 };

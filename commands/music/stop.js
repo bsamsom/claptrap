@@ -5,11 +5,9 @@ module.exports = {
 	args: false,
 	usage: '',
 	guildOnly: true,
-	execute(message) {
-		try{
-			client = message.client;
-			client.player.stop(message);
-			message.channel.send('Music stopped, the Queue was cleared!');
-		} catch(e){ console.log("error stopping song:", e) }
+	async execute(message) {
+		client = message.client;
+		let guildQueue = client.player.getQueue(message.guild.id);
+		guildQueue.stop();
 	},
 };

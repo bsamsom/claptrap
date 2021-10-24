@@ -6,10 +6,9 @@ module.exports = {
 	usage: '',
 	guildOnly: true,
 	async execute(message) {
-		try{
-			client = message.client;
-			let song = await client.player.nowPlaying(message);
-			message.channel.send(`${song.name} is currently playing!`);
-		} catch(e){ console.log("error listing playing song:", e) }
+		client = message.client;
+		let guildQueue = client.player.getQueue(message.guild.id);
+		guildQueue.setPaused(true);
+		message.channel.send(`Now playing: ${guildQueue.nowPlaying}`);
 	},
 };

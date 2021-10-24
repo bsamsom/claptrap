@@ -6,13 +6,8 @@ module.exports = {
 	usage: '',
 	guildOnly: true,
 	async execute(message) {
-		try{
-			client = message.client;
-            client.player.shuffle(message);
-            message.channel.send('Server Queue was shuffled.');
-            const args = [ 'queue'];
-            const command = args.shift().toLowerCase();
-            client.commands.get(command).execute(message);
-		} catch(e){ console.log("Error shuffling Server Queue", e) }
+		client = message.client;
+		let guildQueue = client.player.getQueue(message.guild.id);
+		guildQueue.shuffle();
 	},
 };

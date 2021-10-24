@@ -11,7 +11,7 @@ module.exports = {
 		var roles;
 		message.guild.roles.fetch()
 		.then(allroles => {
-			allroles.cache.forEach((role) => {
+			allroles.forEach((role) => {
 				//console.log(role.name);
 				//console.log(args[0].toLowerCase());
 				if(role.name === args[0].toLowerCase()){

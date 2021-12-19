@@ -120,10 +120,14 @@ function sendEmbed(data, header1, session1, header2, session2, channel) {
 	wpgtime2 = session2.toLocaleTimeString();
 	detime1 = session1.toLocaleTimeString('en-US', { timeZone: 'Europe/Berlin' });
 	detime2 = session2.toLocaleTimeString('en-US', { timeZone: 'Europe/Berlin' });
-	if(wpgtime1 == '12:00:00 AM'){ wpgtime1 = "No Session"; };
-	if(wpgtime2 == '12:00:00 AM'){ wpgtime2 = "No Session"; };
-	if(detime1 == '12:00:00 AM'){ detime1 = "No Session"; };
-	if(detime2 == '12:00:00 AM'){ detime2 = "No Session"; };
+	if(wpgtime1 == '12:00:00 AM'){ 
+		wpgtime1 = "No Session";
+		detime1 = "No Session";
+	};
+	if(wpgtime2 == '12:00:00 AM'){ 
+		wpgtime2 = "No Session";
+		detime2 = "No Session";
+	};
 
 	name1 = header1.split(' ');
 	name2 = header2.split(' ');

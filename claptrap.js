@@ -25,6 +25,7 @@ client.commands = new Collection();
 const player = new Player(client, {
 	leaveOnEmpty: true, // This options are optional.
 	leaveOnEnd: true,
+	timeout: 5,
 	quality: 'high'
 });
 client.player = player;

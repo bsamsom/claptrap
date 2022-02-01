@@ -5,6 +5,7 @@ const { MessageEmbed } = require('discord.js');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 module.exports = {
+
 	name: 'schedule',
 	description: 'Displays a schedule pulled from a google spreadsheet',
 	aliases: [''],
@@ -12,6 +13,12 @@ module.exports = {
 	usage: '<full|upcoming|next>',
 	guildOnly: false,
 	async execute(message, args) {
+		const SESSION_ONE_START 			= 0;
+		const SESSION_ONE_END 				= 1;
+		const SESSION_ONE_MISSING_PLAYERS 	= 2;
+		const SESSION_TWO_START 			= 3;
+		const SESSION_TWO_END 				= 4;
+		const SESSION_TWO_MISSING_PLAYERS 	= 5;
 		let channel = '';
 		if(message.channel) {
 			channel = message.channel;
@@ -33,16 +40,18 @@ module.exports = {
 			const rows = await sheet.getRows();
 			
 			header1=rows[0]._sheet.headerValues[0];
-			header2=rows[0]._sheet.headerValues[2];
-			//console.log(header1, header2);
+			header2=rows[0]._sheet.headerValues[3];
+			// console.log(header1, header2);
 			const BreakException = {};
 			var data = new Table;
 			try {
 				rows.forEach(row => {
-					date1= row._rawData[0];
-					date2= row._rawData[2];
-					time1= row._rawData[1];
-					time2= row._rawData[3];
+					date1		= row._rawData[SESSION_ONE_START];
+					date2		= row._rawData[SESSION_TWO_START];
+					time1		= row._rawData[SESSION_ONE_END];
+					time2		= row._rawData[SESSION_TWO_END];
+					missing1	= row._rawData[SESSION_ONE_MISSING_PLAYERS];
+					missing2	= row._rawData[SESSION_TWO_MISSING_PLAYERS];
 
 					time1split = time1.split(":");// hours/mins
 					session1_date = new Date(date1);
@@ -69,13 +78,16 @@ module.exports = {
 					else if (args[0] == 'next') {
 						if (session1_date > Date.now() || session2_date > Date.now()) {
 							//data = setData(data, header1, session1_date, header2, session2_date, channel);
-							sendEmbed(data, header1, session1_date, header2, session2_date, channel);
+							sendEmbed(data, header1, session1_date, missing1, header2, session2_date, missing2, channel);
 							throw BreakException;
 						}
 					}
 				});
 			}
 			catch (e) {
+				if (e.length > 0){
+					console.log("Error:", e)
+				}
 				// used to end early on next
 			}
 			if(data.toString().length > 10){
@@ -115,7 +127,7 @@ function setData(data, header1, session1, header2, session2, channel) {
 	data.newRow();	
 	return data;
 }
-function sendEmbed(data, header1, session1, header2, session2, channel) {
+function sendEmbed(data, header1, session1, missing1, header2, session2, missing2, channel) {
 	wpgtime1 = session1.toLocaleTimeString();
 	wpgtime2 = session2.toLocaleTimeString();
 	detime1 = session1.toLocaleTimeString('en-US', { timeZone: 'Europe/Berlin' });
@@ -132,6 +144,13 @@ function sendEmbed(data, header1, session1, header2, session2, channel) {
 	name1 = header1.split(' ');
 	name2 = header2.split(' ');
 
+	if (!missing1){
+		missing1 = "None"
+	}
+	if (!missing2){
+		missing1 = "None"
+	}
+
 	const embed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle('DND schedule')
@@ -141,15 +160,17 @@ function sendEmbed(data, header1, session1, header2, session2, channel) {
 		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
 		.addFields(
 			// Brent
-			{ name: header1, value: session1.toDateString(), inline: true },
-			{ name: `Start Time(CA)`, value: wpgtime1, inline: true },
-			{ name: `Start Time(DE)`, value: detime1, inline: true },
+			{ name: header1				, value: session1.toDateString(), inline: true },
+			{ name: `Start Time(CA)`	, value: wpgtime1				, inline: true },
+			{ name: `Start Time(DE)`	, value: detime1				, inline: true },
+			{ name: `Missing Players`	, value: missing1				, inline: true  },
 			// line break
 			{ name: '\u200B', value: '\u200B', inline: false },
 			// Anil
-			{ name: header2, value: session2.toDateString(), inline: true },
-			{ name: `Start Time(CA)`, value: wpgtime2, inline: true },
-			{ name: `Start Time(DE)`, value: detime2, inline: true },
+			{ name: header2				, value: session2.toDateString(), inline: true },
+			{ name: `Start Time(CA)`	, value: wpgtime2				, inline: true },
+			{ name: `Start Time(DE)`	, value: detime2				, inline: true },
+			{ name: `Missing Players`	, value: missing2				, inline: true },
 		)
 		//.addField('Inline field title', 'Some value here', true)
 		//.setImage('https://i.imgur.com/AfFp7pu.png')

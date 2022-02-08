@@ -148,8 +148,9 @@ function sendEmbed(data, header1, session1, missing1, header2, session2, missing
 		missing1 = "None"
 	}
 	if (!missing2){
-		missing1 = "None"
+		missing2 = "None"
 	}
+	// console.log(missing1, missing2)
 
 	const embed = new MessageEmbed()
 		.setColor('#0099ff')

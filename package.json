@@ -4,7 +4,7 @@
   "description": "This is a bot for discord written in javascript",
   "main": "index.js",
   "dependencies": {
-    "@discordjs/opus": "^0.7.0",
+    "@discordjs/opus": "^0.8.0",
     "@discordjs/voice": "^0.8.0",
     "coffeescript": "^2.6.1",
     "cron": "^1.8.2",

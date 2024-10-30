@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@discordjs/opus": "^0.8.0",
-    "@discordjs/voice": "^0.8.0",
+    "@discordjs/voice": "^0.17.0",
     "coffeescript": "^2.7.0",
     "cron": "^1.8.2",
     "discord-music-player": "^8.3.1",

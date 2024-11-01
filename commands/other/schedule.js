@@ -1,39 +1,45 @@
-const creds = require('../../client_secret.json');
-const config = require('../../config.json');
 const Table = require('easy-table');
-const { MessageEmbed } = require('discord.js');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
-module.exports = {
+const path = require('path');
+const config = require(path.resolve(__dirname, '../../config/globals'));
 
-	name: 'schedule',
-	description: 'Displays a schedule pulled from a google spreadsheet',
-	aliases: [''],
-	args: true,
-	usage: '<full|upcoming|next>',
-	guildOnly: false,
-	async execute(message, args) {
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('schedule')
+		.setDescription('Displays a schedule pulled from a google spreadsheet')
+		.addStringOption(option =>
+			option.setName('type')
+				.setDescription('The schedule type')
+				.setRequired(true)
+				.addChoices(
+					{ name: 'full', value: 'full' },
+					{ name: 'upcoming', value: 'upcoming' },
+					{ name: 'next', value: 'next' },
+				)),
+	async execute(interaction) {
+		await interaction.reply({ content: 'Command received!', ephemeral: true });
+		const channel = interaction.channel;
+
+		const option = interaction.options.getString('type');
+
 		const SESSION_ONE_START 			= 0;
 		const SESSION_ONE_END 				= 1;
 		const SESSION_ONE_MISSING_PLAYERS 	= 2;
 		const SESSION_TWO_START 			= 3;
 		const SESSION_TWO_END 				= 4;
 		const SESSION_TWO_MISSING_PLAYERS 	= 5;
-		let channel = '';
-		if(message.channel) {
-			channel = message.channel;
+
+		if(!config.GOOGLE_SPREADSHEET_ID){
+			return channel.send("Missing Spreadsheet for pulling a schedule");
 		}
-		else{
-			channel = message;
-		}
-		if(!config.SPREADSHEET_ID){
-			return message.channel.send("Missing Spreadsheet for pulling a schedule");
-		}
-		const doc = new GoogleSpreadsheet(config.SPREADSHEET_ID);
+		const doc = new GoogleSpreadsheet(config.GOOGLE_SPREADSHEET_ID);
 		try {
 			await doc.useServiceAccountAuth({
-				client_email: creds.client_email,
-				private_key: creds.private_key,
+				client_email: config.GOOGLE_CLIENT_EMAIL,
+				private_key: formatPrivateKey(config.GOOGLE_PRIVATE_KEY),
 			});
 			await doc.loadInfo(); // loads document properties and worksheets
 			const sheet = doc.sheetsByIndex[0]; 
@@ -43,7 +49,7 @@ module.exports = {
 			header2=rows[0]._sheet.headerValues[3];
 			// console.log(header1, header2);
 			const BreakException = {};
-			var data = new Table;
+			var table = new Table;
 			try {
 				rows.forEach(row => {
 					date1		= row._rawData[SESSION_ONE_START];
@@ -67,18 +73,22 @@ module.exports = {
 						session2_date.setMinutes(time2split[1]);//minutes
 					}	
 
-					if (args[0] == 'full') {
-						data = setData(data, header1, session1_date, header2, session2_date, channel);
+					if (option == 'full') {
+						// console.log("option full");
+						table = setData(table, header1, session1_date, header2, session2_date, channel);
 					}
-					else if (args[0] == 'upcoming') {
+					else if (option == 'upcoming') {
+						// console.log("option upcoming");
 						if (session1_date > Date.now() || session2_date > Date.now()) {
-							data = setData(data, header1, session1_date, header2, session2_date, channel);
+							table = setData(table, header1, session1_date, header2, session2_date, channel);
 						}
 					}
-					else if (args[0] == 'next') {
+					else if (option == 'next') {
+						// console.log("option next");
 						if (session1_date > Date.now() || session2_date > Date.now()) {
-							//data = setData(data, header1, session1_date, header2, session2_date, channel);
-							sendEmbed(data, header1, session1_date, missing1, header2, session2_date, missing2, channel);
+							// console.log("test");
+							//table = setData(datableta, header1, session1_date, header2, session2_date, channel);
+							sendEmbed(table, header1, session1_date, missing1, header2, session2_date, missing2, channel);
 							throw BreakException;
 						}
 					}
@@ -90,18 +100,41 @@ module.exports = {
 				}
 				// used to end early on next
 			}
-			if(data.toString().length > 10){
-				//console.log("data.toString().length", data.toString().length);
-				channel.send('```' + data.toString() + '```');
+			if(table.toString().length > 10){
+				console.log("table.toString().length", table.toString().length);
+				channel.send('```' + table.toString() + '```');
 			}
 		} catch (e) {
-			console.log(e.Error)
+			console.log("end", e)
 			// Deal with the fact the chain failed
 		}
 	},
-};
+}
 
-function setData(data, header1, session1, header2, session2, channel) {
+function formatPrivateKey(privateKey) {
+    const HEADER = '-----BEGIN PRIVATE KEY-----\n';
+    const FOOTER = '\n-----END PRIVATE KEY-----\n';
+    const LINE_LENGTH = 64;
+
+	// Remove any existing headers/footers
+    const cleanKey = privateKey
+        .replace(/-----BEGIN PRIVATE KEY-----/g, '')
+        .replace(/-----END PRIVATE KEY-----/g, '')
+        .replace(/\s+/g, '');
+
+    // Split the key into chunks of LINE_LENGTH
+    const formattedKey = cleanKey.match(new RegExp('.{1,' + LINE_LENGTH + '}', 'g'));
+
+    // Join the chunks with a newline
+    const formattedKeyWithNewlines = formattedKey ? formattedKey.join('\n') : '';
+
+	const formattedKeyWithNewlinesAndHeaders = HEADER + formattedKeyWithNewlines + FOOTER;
+
+	return formattedKeyWithNewlinesAndHeaders;
+}
+
+
+function setData(table, header1, session1, header2, session2, channel) {
 	time1 = session1.toLocaleTimeString();
 	time2 = session2.toLocaleTimeString();
 	if(time1 == '12:00:00 AM'){ time1 = "No Session"; };
@@ -112,22 +145,22 @@ function setData(data, header1, session1, header2, session2, channel) {
 	var max = 0;
 	if(test1 > max); max = test1.length;
 	if(test2 > max); max = test2.length;
-	if(data.toString().length + max > 1900){
-		channel.send('```' + data.toString() + '```');
-		data = new Table;
+	if(table.toString().length + max > 1900){
+		channel.send('```' + table.toString() + '```');
+		table = new Table;
 	}
 
 	name1 = header1.split(' ');
 	name2 = header2.split(' ');
-	data.cell(`${header1}`, session1.toDateString());
-	data.cell(`${name1[0]} Start Time`, time1);
-	data.cell('|', '|');
-	data.cell(`${header2}`, session2.toDateString());
-	data.cell(`${name2[0]} Start Time`, time2);
-	data.newRow();	
-	return data;
+	table.cell(`${header1}`, session1.toDateString());
+	table.cell(`${name1[0]} Start Time`, time1);
+	table.cell('|', '|');
+	table.cell(`${header2}`, session2.toDateString());
+	table.cell(`${name2[0]} Start Time`, time2);
+	table.newRow();	
+	return table;
 }
-function sendEmbed(data, header1, session1, missing1, header2, session2, missing2, channel) {
+function sendEmbed(table, header1, session1, missing1, header2, session2, missing2, channel) {
 	wpgtime1 = session1.toLocaleTimeString();
 	wpgtime2 = session2.toLocaleTimeString();
 	detime1 = session1.toLocaleTimeString('en-US', { timeZone: 'Europe/Berlin' });
@@ -152,7 +185,7 @@ function sendEmbed(data, header1, session1, missing1, header2, session2, missing
 	}
 	// console.log(missing1, missing2)
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setColor('#0099ff')
 		.setTitle('DND schedule')
 		//.setURL('https://discord.js.org/')
@@ -178,4 +211,5 @@ function sendEmbed(data, header1, session1, missing1, header2, session2, missing
 		//.setTimestamp()
 		//.setFooter('DND schedule', 'https://i.imgur.com/AfFp7pu.png');
 	channel.send({ embeds: [embed] });
+
 }

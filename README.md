@@ -15,19 +15,18 @@ npm install
 
 ```
 {
-  "prefix": "!",
   "token" : "token-id"
 }
 ```
 
 ## Docker-compose
-Start Bot(-d is to run in the background): 
+Start Bot(add -d to run in the background): 
 ```
-docker-compose up -d
+docker-compose --env-file .env up
 ```
 Start Bot with a rebuild: 
 ```
-docker-compose up --build --remove-orphans -d
+docker-compose --env-file .env up --build --remove-orphans
 ```
 Remove Stopped Bot 
 ```
@@ -40,23 +39,9 @@ docker-compose down
 
 ## Dependencies/Setup:
 
-Install node 14+ on Linux:
-```
-$ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
-$ sudo bash nodesource_setup.sh   
-```
-Install node 14+ on Windows:
-```
-https://nodejs.org/en/download/current/
-```
+https://nodejs.org/
+https://docs.docker.com/desktop/install/windows-install/
 
-Install FFMPEG on Linux:
-```
-$ sudo apt install ffmpeg                                              
-```
-
-install npm packages on Windows
-https://github.com/nodejs/node-gyp#on-windows
 
 install packages:
 ```
@@ -77,6 +62,4 @@ npm run debug
 ## Supported languages:
 ```
 javascript
-coffeescript
-go
 ```

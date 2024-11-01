@@ -1,19 +1,12 @@
-const cron = require('../.././crons');
+const cron = require('../../helpers/crons');
 const Table = require('easy-table');
+const { SlashCommandBuilder } = require('discord.js');
+
 module.exports = {
-	name: 'listcrons',
-	description: 'Used to list upcoming cron jobs',
-	aliases: ['crons'],
-	args: false,
-	usage: '',
-	guildOnly: false,
-	execute(message) {
-        if(message.channel) {
-			channel = message.channel;
-		}
-		else{
-			channel = message;
-		}
+	data: new SlashCommandBuilder()
+		.setName('listcrons')
+		.setDescription('Used to list upcoming cron jobs'),
+	async execute(interaction) {
         data = new Table;
 		process.env.TZ = 'America/Winnipeg';
         cron.cronJobs.forEach(cronjob => {
@@ -22,6 +15,6 @@ module.exports = {
             data.cell('Next Run Time', time.toLocaleString('en-US'));
             data.newRow();	
         });
-        channel.send('```' + data.toString() + '```');
+        interaction.reply('```' + data.toString() + '```');
 	},
 }

@@ -1,22 +1,21 @@
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-	name: 'insult',
-	description: 'Generates an insult.',
-	aliases: [''],
-	args: false,
-	usage: '',
-	guildOnly: false,
-	execute(message) {
+	data: new SlashCommandBuilder()
+		.setName('insult')
+		.setDescription('Generates an insult.'),
+	async execute(interaction) {
 		fetch('https://evilinsult.com/generate_insult.php?lang=en&type=json')
 			.then(res => res.json())
 			.then(json => {
-				message.channel.send(json.insult);
+				interaction.reply(json.insult);
 				return;
 			})
 			.catch(e => {
-				message.channel.send('Failed to deliver insult :sob:');
+				const channel = interaction.channel;
+				channel.send('Failed to deliver insult :sob:');
 				return console.error(e);
 			});
 	},
-};
+}

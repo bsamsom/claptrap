@@ -25,7 +25,7 @@ client.commands = new Collection();
 client.once(Events.ClientReady, () => {
 	client.user.setUsername("Claptrap");
 	console.log('Connected as ' + client.user.tag);
-	client.user.setActivity('The Echonet', { GOOGLE_TYPE: 'WATCHING' });
+	client.user.setActivity('The Echonet', { type: 'WATCHING' });
 	//const guild = client.guilds.cache.get(config.DISCORD_GUILD_ID);
 	//const channel = guild.channels.cache.get(config.DISCORD_HUBOT_TESTING);
 	//channel.send(val);

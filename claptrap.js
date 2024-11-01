@@ -1,70 +1,55 @@
-const { Client, Intents, Collection } = require('discord.js');
+const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('fs');
-const { sep } = require('path');
-const { prefix, token, guild_id, hubot_testing, dungeons_and_dragons, bot_id } = require('./config.json');
-const { Player } = require("discord-music-player");
-var exec = require('child_process').execFile;
-const crons = require('./crons');
+
 const path = require('path');
+const config = require(path.resolve(__dirname, './config/globals'));
+const crons = require(path.resolve(__dirname, './helpers/crons'));
+
 const client = new Client({
 	restRequestTimeout: 30000,
 	intents: [
-		Intents.FLAGS.GUILDS,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.GUILD_MEMBERS,
-		//Intents.FLAGS.MESSAGE_CREATE,
-		//Intents.FLAGS.VIEW_CHANNEL,
-		Intents.FLAGS.GUILD_PRESENCES,
-		//Intents.FLAGS.DIRECT_MESSAGES, 
-		Intents.FLAGS.GUILD_VOICE_STATES,
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildMembers,
+		//GatewayIntentBits.MESSAGE_CREATE,
+		//GatewayIntentBits.VIEW_CHANNEL,
+		GatewayIntentBits.GuildPresences,
+		//GatewayIntentBits.DIRECT_MESSAGES,
+		GatewayIntentBits.GuildVoiceStates,
 	] 
 });
 require("coffeescript/register");
 
 client.commands = new Collection();
-const player = new Player(client, {
-	leaveOnEmpty: true, // This options are optional.
-	leaveOnEnd: true,
-	timeout: 5,
-	quality: 'high'
-});
-client.player = player;
 
-client.on('ready', () => {
+client.once(Events.ClientReady, () => {
 	client.user.setUsername("Claptrap");
 	console.log('Connected as ' + client.user.tag);
-	client.user.setActivity('The Echonet', { type: 'WATCHING' });
-	//const guild = client.guilds.cache.get(guild_id);
-	//const channel = guild.channels.cache.get(hubot_testing);
+	client.user.setActivity('The Echonet', { GOOGLE_TYPE: 'WATCHING' });
+	//const guild = client.guilds.cache.get(config.DISCORD_GUILD_ID);
+	//const channel = guild.channels.cache.get(config.DISCORD_HUBOT_TESTING);
 	//channel.send(val);
 
 });
 
-//adding songs to queue 
-client.player.on('songAdd',  (message, queue, song) =>
-    message.channel.send(`**${song.name}** has been added to the queue!`))
-    .on('songFirst',  (message, song) =>
-    	message.channel.send(`**${song.name}** is now playing!`));
-//adding playlist
-client.player
-	.on('playlistAdd',  (message, queue, playlist) => 
-		message.channel.send(`${playlist.name} playlist with ${playlist.videoCount} songs has been added to the queue!`));
-	
+const foldersPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(foldersPath);
 
-const load = (dir = './commands/') => {
-	fs.readdirSync(dir).forEach(dirs => {
-		const commands = fs.readdirSync(`${dir}${sep}${dirs}${sep}`).filter(files => files.endsWith('.js') || files.endsWith('.coffee'));
-		for (const file of commands) {
-		// We make a pull to that file so we can add it the bot.commands collection
-			const pull = require(`${dir}/${dirs}/${file}`);
-			//console.log(pull.name, pull)
-			client.commands.set(pull.name, pull);
+for (const folder of commandFolders) {
+	const commandsPath = path.join(foldersPath, folder);
+	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const filePath = path.join(commandsPath, file);
+		const command = require(filePath);
+		// Set a new item in the Collection with the key as the command name and the value as the exported module
+		if ('data' in command && 'execute' in command) {
+			client.commands.set(command.data.name, command);
+		} else {
+			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
-	});
-};
+	}
+}
 
-// we call the function to all the commands.
-load();
 //load cron jobs
 crons.loadcrons(client);
 
@@ -75,85 +60,29 @@ client.on('guildMemberAdd', member => {
 	channel.send(`Welcome ${member}!`);
 });
 
-client.on('messageCreate', (message) => {
-	//messageContains(message);
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isChatInputCommand()) return;
 
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	const command = interaction.client.commands.get(interaction.commandName);
 
-	// whitespace
-	const args = message.content.slice(prefix.length).split(/ +/);
-	args.push(client);
-	const commandName = args.shift().toLowerCase();
-
-	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 	if (!command) {
-		GO_DIR = process.env.GO_DIR || `commands/go`;
-		var p = GO_DIR + "/" + commandName;
-		if(checkFileExistsSync(p)){
-			//file exists do something.
-			exec(p, function(err, data) {  
-				if(err){
-					message.reply('there was an error trying to execute that command!');
-				}
-				else{
-					message.channel.send(data.toString());
-					//message.channel.send(data.toString());
-				}                    
-			});  
-		}
-		else{
-			return;
-		}
+		console.error(`No command matching ${interaction.commandName} was found.`);
+		return;
 	}
-	else {
-		if (command.guildOnly && message.channel.type == 'DM') {
-			return message.reply('I can\'t execute that command inside DMs!');
-		}
-	
-		if (command.args && args.length == 1) {
-			let reply = `You didn't provide any arguments, ${message.author}!`;
-	
-			if (command.usage) {
-				reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
-			}
-	
-			return message.channel.send(reply);
-		}
-	
-		try {
-			command.execute(message, args);
-		}
-		catch (error) {
-			console.error(error);
-			message.reply('there was an error trying to execute that command!');
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		if (interaction.replied || interaction.deferred) {
+			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+		} else {
+			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 		}
 	}
 });
 
-function messageContains(message) {
-	if(message.content.includes('food')) {
-		message.react('🥞');
-	}
-	if(includes(message, 'died') || includes(message, 'death') || includes(message, 'kill') || includes(message, 'die')) {
-		message.react('☠');
-	}
-	if(includes(message, '?')) { message.react('⁉️'); }
-	
-}
-function includes(message, val) {return message.content.includes(val);}
-
-function checkFileExistsSync(filepath){
-	let flag = true;
-	try{
-	  fs.accessSync(filepath, fs.constants.F_OK);
-	}catch(e){
-	  flag = false;
-	}
-	return flag;
-}
-
-
-client.login(token);
+client.login(config.DISCORD_TOKEN);
 
 process.on("unhandledRejection", error => 
 	console.error("Promise rejection:", error)

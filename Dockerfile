@@ -1,4 +1,4 @@
-FROM node:16.11.1-alpine3.12    
+FROM node:22.11.0-alpine  
 
 # create working dir
 WORKDIR /usr/src/bot
@@ -9,15 +9,12 @@ ENV TZ=America/Winnipeg
 RUN apk update && \
     apk upgrade && \
     apk add --no-cache \
-        ffmpeg \
         python3 \
         make \
         g++ \
         tzdata \
         curl \
         bash \
-        gcc \
-        go \
     && rm -rf /var/cache/apk/*
 
 
@@ -26,14 +23,8 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm install --production
 
-COPY config.json ./
-COPY client_secret.json ./
-
 # Copy everything else
 COPY . .
-
-#build go binaries from files"
-RUN cd $GO_DIR && go build *.go
 
 CMD [ "node", "claptrap.js" ]
 

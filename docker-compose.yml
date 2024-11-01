@@ -1,9 +1,25 @@
-version: '3'
 services:
     bot:
         container_name: discord_bot
         build: .
         restart: always
         environment:
-            - GO_DIR=/usr/src/bot/commands/go
             - TZ=America/Winnipeg
+            - DISCORD_ADMIN_ID=${DISCORD_ADMIN_ID}
+            - DISCORD_BOT_ID=${DISCORD_BOT_ID}
+            - DISCORD_DUNGEONS_AND_DRAGONS=${DISCORD_DUNGEONS_AND_DRAGONS}
+            - DISCORD_GUILD_ID=${DISCORD_GUILD_ID}
+            - DISCORD_HUBOT_TESTING=${DISCORD_HUBOT_TESTING}
+            - DISCORD_TOKEN=${DISCORD_TOKEN}
+            - GOOGLE_SPREADSHEET_ID=${GOOGLE_SPREADSHEET_ID}
+            - GOOGLE_AUTH_PROVIDER_X509_CERT_URL=${GOOGLE_AUTH_PROVIDER_X509_CERT_URL}
+            - GOOGLE_AUTH_URI=${GOOGLE_AUTH_URI}
+            - GOOGLE_CLIENT_EMAIL=${GOOGLE_CLIENT_EMAIL}
+            - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+            - GOOGLE_CLIENT_X509_CERT_URL=${GOOGLE_CLIENT_X509_CERT_URL}
+            - GOOGLE_PRIVATE_KEY=${GOOGLE_PRIVATE_KEY}
+            - GOOGLE_PRIVATE_KEY_ID=${GOOGLE_PRIVATE_KEY_ID}
+            - GOOGLE_PROJECT_ID=${GOOGLE_PROJECT_ID}
+            - GOOGLE_TOKEN_URI=${GOOGLE_TOKEN_URI}
+            - GOOGLE_TYPE=${GOOGLE_TYPE}
+

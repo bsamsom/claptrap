@@ -18,7 +18,6 @@ const client = new Client({
 		GatewayIntentBits.GuildVoiceStates,
 	] 
 });
-require("coffeescript/register");
 
 client.commands = new Collection();
 

@@ -22,93 +22,96 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.reply({ content: 'Command received!', ephemeral: true });
 		const channel = interaction.channel;
-
 		const option = interaction.options.getString('type');
+		processSchedule(option, channel);
+	},
+	processSchedule
+}
 
-		const SESSION_ONE_START 			= 0;
-		const SESSION_ONE_END 				= 1;
-		const SESSION_ONE_MISSING_PLAYERS 	= 2;
-		const SESSION_TWO_START 			= 3;
-		const SESSION_TWO_END 				= 4;
-		const SESSION_TWO_MISSING_PLAYERS 	= 5;
+async function processSchedule(option, channel){
+	const SESSION_ONE_START 			= 0;
+	const SESSION_ONE_END 				= 1;
+	const SESSION_ONE_MISSING_PLAYERS 	= 2;
+	const SESSION_TWO_START 			= 3;
+	const SESSION_TWO_END 				= 4;
+	const SESSION_TWO_MISSING_PLAYERS 	= 5;
 
-		if(!config.GOOGLE_SPREADSHEET_ID){
-			return channel.send("Missing Spreadsheet for pulling a schedule");
-		}
-		const doc = new GoogleSpreadsheet(config.GOOGLE_SPREADSHEET_ID);
+	if(!config.GOOGLE_SPREADSHEET_ID){
+		return channel.send("Missing Spreadsheet for pulling a schedule");
+	}
+	const doc = new GoogleSpreadsheet(config.GOOGLE_SPREADSHEET_ID);
+	try {
+		await doc.useServiceAccountAuth({
+			client_email: config.GOOGLE_CLIENT_EMAIL,
+			private_key: formatPrivateKey(config.GOOGLE_PRIVATE_KEY),
+		});
+		await doc.loadInfo(); // loads document properties and worksheets
+		const sheet = doc.sheetsByIndex[0]; 
+		const rows = await sheet.getRows();
+		
+		header1=rows[0]._sheet.headerValues[0];
+		header2=rows[0]._sheet.headerValues[3];
+		// console.log(header1, header2);
+		const BreakException = {};
+		var table = new Table;
 		try {
-			await doc.useServiceAccountAuth({
-				client_email: config.GOOGLE_CLIENT_EMAIL,
-				private_key: formatPrivateKey(config.GOOGLE_PRIVATE_KEY),
-			});
-			await doc.loadInfo(); // loads document properties and worksheets
-			const sheet = doc.sheetsByIndex[0]; 
-			const rows = await sheet.getRows();
-			
-			header1=rows[0]._sheet.headerValues[0];
-			header2=rows[0]._sheet.headerValues[3];
-			// console.log(header1, header2);
-			const BreakException = {};
-			var table = new Table;
-			try {
-				rows.forEach(row => {
-					date1		= row._rawData[SESSION_ONE_START];
-					date2		= row._rawData[SESSION_TWO_START];
-					time1		= row._rawData[SESSION_ONE_END];
-					time2		= row._rawData[SESSION_TWO_END];
-					missing1	= row._rawData[SESSION_ONE_MISSING_PLAYERS];
-					missing2	= row._rawData[SESSION_TWO_MISSING_PLAYERS];
+			rows.forEach(row => {
+				date1		= row._rawData[SESSION_ONE_START];
+				date2		= row._rawData[SESSION_TWO_START];
+				time1		= row._rawData[SESSION_ONE_END];
+				time2		= row._rawData[SESSION_TWO_END];
+				missing1	= row._rawData[SESSION_ONE_MISSING_PLAYERS];
+				missing2	= row._rawData[SESSION_TWO_MISSING_PLAYERS];
 
-					time1split = time1.split(":");// hours/mins
-					session1_date = new Date(date1);
-					if (time1split.length == 2){
-						session1_date.setHours(time1split[0]);//hours
-						session1_date.setMinutes(time1split[1]);//minutes
-					}
+				time1split = time1.split(":");// hours/mins
+				session1_date = new Date(date1);
+				if (time1split.length == 2){
+					session1_date.setHours(time1split[0]);//hours
+					session1_date.setMinutes(time1split[1]);//minutes
+				}
 
-					time2split = time2.split(":");// hours/mins
-					session2_date = new Date(date2);
-					if (time2split.length == 2){
-						session2_date.setHours(time2split[0]);//hours
-						session2_date.setMinutes(time2split[1]);//minutes
-					}	
+				time2split = time2.split(":");// hours/mins
+				session2_date = new Date(date2);
+				if (time2split.length == 2){
+					session2_date.setHours(time2split[0]);//hours
+					session2_date.setMinutes(time2split[1]);//minutes
+				}	
 
-					if (option == 'full') {
-						// console.log("option full");
+				if (option == 'full') {
+					// console.log("option full");
+					table = setData(table, header1, session1_date, header2, session2_date, channel);
+				}
+				else if (option == 'upcoming') {
+					// console.log("option upcoming");
+					if (session1_date > Date.now() || session2_date > Date.now()) {
 						table = setData(table, header1, session1_date, header2, session2_date, channel);
 					}
-					else if (option == 'upcoming') {
-						// console.log("option upcoming");
-						if (session1_date > Date.now() || session2_date > Date.now()) {
-							table = setData(table, header1, session1_date, header2, session2_date, channel);
-						}
-					}
-					else if (option == 'next') {
-						// console.log("option next");
-						if (session1_date > Date.now() || session2_date > Date.now()) {
-							// console.log("test");
-							//table = setData(datableta, header1, session1_date, header2, session2_date, channel);
-							sendEmbed(table, header1, session1_date, missing1, header2, session2_date, missing2, channel);
-							throw BreakException;
-						}
-					}
-				});
-			}
-			catch (e) {
-				if (e.length > 0){
-					console.log("Error:", e)
 				}
-				// used to end early on next
-			}
-			if(table.toString().length > 10){
-				console.log("table.toString().length", table.toString().length);
-				channel.send('```' + table.toString() + '```');
-			}
-		} catch (e) {
-			console.log("end", e)
-			// Deal with the fact the chain failed
+				else if (option == 'next') {
+					// console.log("option next");
+					if (session1_date > Date.now() || session2_date > Date.now()) {
+						// console.log("test");
+						//table = setData(datableta, header1, session1_date, header2, session2_date, channel);
+						sendEmbed(table, header1, session1_date, missing1, header2, session2_date, missing2, channel);
+						throw BreakException;
+					}
+				}
+			});
 		}
-	},
+		catch (e) {
+			if (e.length > 0){
+				console.log("Error:", e)
+			}
+			// used to end early on next
+		}
+		if(table.toString().length > 10){
+			console.log("table.toString().length", table.toString().length);
+			channel.send('```' + table.toString() + '```');
+		}
+	} catch (e) {
+		console.log("end", e)
+		// Deal with the fact the chain failed
+	}
 }
 
 function formatPrivateKey(privateKey) {

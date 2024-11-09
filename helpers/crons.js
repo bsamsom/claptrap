@@ -52,7 +52,7 @@ function test_cron(client) {
 function cron_schedule(client){
 	const scheduleCommand = require('../commands/other/schedule');
 	const channel = client.channels.cache.get(config.DISCORD_DUNGEONS_AND_DRAGONS)
-	scheduleCommand.processSchedule('next', channel)
+	scheduleCommand.processSchedule('next', channel, null)
 }
 
 function loadcrons(client){

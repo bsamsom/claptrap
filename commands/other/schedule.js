@@ -1,5 +1,6 @@
 const Table = require('easy-table');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { JWT } = require('google-auth-library');
 
 const path = require('path');
 const config = require(path.resolve(__dirname, '../../config/globals'));
@@ -20,15 +21,14 @@ module.exports = {
 					{ name: 'next', value: 'next' },
 				)),
 	async execute(interaction) {
-		await interaction.reply({ content: 'Command received!', ephemeral: true });
 		const channel = interaction.channel;
 		const option = interaction.options.getString('type');
-		processSchedule(option, channel);
+		processSchedule(option, channel, interaction);
 	},
 	processSchedule
 }
 
-async function processSchedule(option, channel){
+async function processSchedule(option, channel, interaction){
 	const SESSION_ONE_START 			= 0;
 	const SESSION_ONE_END 				= 1;
 	const SESSION_ONE_MISSING_PLAYERS 	= 2;
@@ -39,18 +39,22 @@ async function processSchedule(option, channel){
 	if(!config.GOOGLE_SPREADSHEET_ID){
 		return channel.send("Missing Spreadsheet for pulling a schedule");
 	}
-	const doc = new GoogleSpreadsheet(config.GOOGLE_SPREADSHEET_ID);
+
+	const auth = new JWT({
+		email: config.GOOGLE_CLIENT_EMAIL,
+		key: formatPrivateKey(config.GOOGLE_PRIVATE_KEY),
+		scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+	});
+
+	const doc = new GoogleSpreadsheet(config.GOOGLE_SPREADSHEET_ID, auth);
 	try {
-		await doc.useServiceAccountAuth({
-			client_email: config.GOOGLE_CLIENT_EMAIL,
-			private_key: formatPrivateKey(config.GOOGLE_PRIVATE_KEY),
-		});
 		await doc.loadInfo(); // loads document properties and worksheets
 		const sheet = doc.sheetsByIndex[0]; 
+		await sheet.loadHeaderRow();
 		const rows = await sheet.getRows();
 		
-		header1=rows[0]._sheet.headerValues[0];
-		header2=rows[0]._sheet.headerValues[3];
+		header1 = sheet.headerValues[0];
+		header2 = sheet.headerValues[3];
 		// console.log(header1, header2);
 		const BreakException = {};
 		var table = new Table;
@@ -92,7 +96,7 @@ async function processSchedule(option, channel){
 					if (session1_date > Date.now() || session2_date > Date.now()) {
 						// console.log("test");
 						//table = setData(datableta, header1, session1_date, header2, session2_date, channel);
-						sendEmbed(table, header1, session1_date, missing1, header2, session2_date, missing2, channel);
+						sendEmbed(table, header1, session1_date, missing1, header2, session2_date, missing2, channel, interaction);
 						throw BreakException;
 					}
 				}
@@ -163,7 +167,7 @@ function setData(table, header1, session1, header2, session2, channel) {
 	table.newRow();	
 	return table;
 }
-function sendEmbed(table, header1, session1, missing1, header2, session2, missing2, channel) {
+function sendEmbed(table, header1, session1, missing1, header2, session2, missing2, channel, interaction) {
 	wpgtime1 = session1.toLocaleTimeString();
 	wpgtime2 = session2.toLocaleTimeString();
 	detime1 = session1.toLocaleTimeString('en-US', { timeZone: 'Europe/Berlin' });
@@ -191,10 +195,6 @@ function sendEmbed(table, header1, session1, missing1, header2, session2, missin
 	const embed = new EmbedBuilder()
 		.setColor('#0099ff')
 		.setTitle('DND schedule')
-		//.setURL('https://discord.js.org/')
-		//.setAuthor('Some name', 'https://i.imgur.com/AfFp7pu.png', 'https://discord.js.org')
-		//.setDescription('Some description here')
-		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
 		.addFields(
 			// Brent
 			{ name: header1				, value: session1.toDateString(), inline: true },
@@ -209,10 +209,11 @@ function sendEmbed(table, header1, session1, missing1, header2, session2, missin
 			{ name: `Start Time(DE)`	, value: detime2				, inline: true },
 			{ name: `Missing Players`	, value: missing2				, inline: true },
 		)
-		//.addField('Inline field title', 'Some value here', true)
-		//.setImage('https://i.imgur.com/AfFp7pu.png')
-		//.setTimestamp()
-		//.setFooter('DND schedule', 'https://i.imgur.com/AfFp7pu.png');
-	channel.send({ embeds: [embed] });
+	if (interaction != null) {
+		interaction.reply({ embeds: [embed] });
+	}
+	else{
+		channel.send({ embeds: [embed] });
+	}
 
 }

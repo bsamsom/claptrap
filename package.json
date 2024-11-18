@@ -8,7 +8,7 @@
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
     "easy-table": "^1.2.0",
-    "google-auth-library": "^9.14.2",
+    "google-auth-library": "^9.15.0",
     "google-spreadsheet": "^4.1.4",
     "node-fetch": "^3.3.2"
   },

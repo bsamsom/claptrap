@@ -13,8 +13,8 @@ RUN apk update && \
 
 #copy required setup files
 COPY package.json ./
-COPY package-lock.json ./
-RUN npm ci --omit=dev
+
+RUN npm install
 
 # Copy everything else
 COPY . .

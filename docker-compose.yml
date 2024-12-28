@@ -22,4 +22,5 @@ services:
             - GOOGLE_PROJECT_ID=${GOOGLE_PROJECT_ID}
             - GOOGLE_TOKEN_URI=${GOOGLE_TOKEN_URI}
             - GOOGLE_TYPE=${GOOGLE_TYPE}
+            - CALENDAR=${CALENDAR}
 

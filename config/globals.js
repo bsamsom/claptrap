@@ -17,4 +17,5 @@ module.exports = {
     GOOGLE_PROJECT_ID:                      process.env.GOOGLE_PROJECT_ID                       || "",
     GOOGLE_TOKEN_URI:                       process.env.GOOGLE_TOKEN_URI                        || "",
     GOOGLE_TYPE:                            process.env.GOOGLE_TYPE                             || "",
+    CALENDAR:                               process.env.CALENDAR                                || "",
 };

@@ -12,9 +12,9 @@ RUN apk update && \
     && rm -rf /var/cache/apk/*
 
 #copy required setup files
-COPY package.json ./
+COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci --omit=optional
 
 # Copy everything else
 COPY . .

@@ -1,4 +1,4 @@
-FROM node:22.11.0-alpine  
+FROM node:26.5.0-alpine  
 
 # create working dir
 WORKDIR /usr/src/bot
